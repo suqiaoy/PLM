@@ -390,7 +390,7 @@ public class MainFrame extends JFrame implements GameStateListener, GameListener
 
 			public void actionPerformed(ActionEvent arg0) {
 				FeedbackDialog.getInstance().setVisible(true);
-			}			
+			}
 		});
 		miHelpFeedback.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SPACE, ActionEvent.CTRL_MASK));
 		menuHelp.add(miHelpFeedback);

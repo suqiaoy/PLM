@@ -34,16 +34,20 @@ public class GitSpy implements ProgressSpyListener, UserSwitchesListener {
 	public GitSpy(File path, Users users) throws IOException, GitAPIException {
 		this.plmDir = path;
 		
-		gitUtils = new GitUtils();
-		
-		for(String url : repoUrls.split(",")) {
-			// TODO: check if repo exists and is accessible
-			if(gitUtils.repoExists(url)) {
-				System.out.println("Switching to "+url);
+		for(String url : repoUrls.split(" , ")) {
+			if(GitUtils.repoExists(url)) {
+				// FIXME: Should be able to display the following message at initialization
+				/*
+				if(Game.getInstance().isDebugEnabled()) {
+					System.out.println(Game.i18n.tr("{0} is a valid repository, switching to it...", url));
+				}
+				*/
 				repoUrl = url;
 				break;
 			}
 		}
+		
+		gitUtils = new GitUtils();
 		
 		users.addUserSwitchesListener(this);
 		userHasChanged(users.getCurrentUser());

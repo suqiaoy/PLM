@@ -29,7 +29,6 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
-import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.ProgressMonitor;
@@ -359,14 +358,19 @@ public class GitUtils {
 		return git.getRepository().getRef(branch);
 	}
 
-	public boolean repoExists(String url) {
+	public static boolean repoExists(String url) {
 		boolean success = true;
 		try {
 			Git.lsRemoteRepository().setRemote(url).call();
 		} catch (GitAPIException e) {
-			System.out.println(url+ " is not a valid repository...");
+			// FIXME: Should be able to display the following message at initialization
+			/*
+			if(Game.getInstance().isDebugEnabled()) {
+				System.out.println(Game.i18n.tr("{0} is not a valid repository...", url));
+				e.printStackTrace();
+			}
+			*/
 			success = false;
-			e.printStackTrace();
 		}
 		return success;
 	}

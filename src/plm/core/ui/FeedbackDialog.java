@@ -38,6 +38,7 @@ public class FeedbackDialog extends JDialog {
 	
 	public I18n i18n = I18nFactory.getI18n(getClass(), "org.plm.i18n.Messages", getLocale(), I18nFactory.FALLBACK);
 	public String errorMsg;
+	private String gitOwner;
 	final JEditorPane feedback = new JEditorPane();
 	final JTextField title = new JTextField();
 	
@@ -85,6 +86,7 @@ public class FeedbackDialog extends JDialog {
 		super(MainFrame.getInstance(), "Report your feedback", false);
 		this.setTitle(i18n.tr("Report your feedback"));
 		initComponent();
+		gitOwner = getGitOwner();
 	}
 
 	public void initComponent() {
@@ -132,7 +134,7 @@ public class FeedbackDialog extends JDialog {
 					issue.setBody(feedback.getText());
 					IssueService issueService = new IssueService(client);
 					try {
-						Issue i = issueService.createIssue(Game.getProperty("plm.github.owner"), Game.getProperty("plm.github.repo"), issue);
+						Issue i = issueService.createIssue(gitOwner, Game.getProperty("plm.github.repo"), issue);
 						JOptionPane.showMessageDialog(sendBtn, i18n.tr(
 								  "Thank you for your remark, we will do our best to integrate it.\n"
 								+ "Follow our progress at {0}.",i.getHtmlUrl()), i18n.tr("Thanks for your suggestion"), JOptionPane.INFORMATION_MESSAGE);
@@ -189,5 +191,18 @@ public class FeedbackDialog extends JDialog {
 		}
 		errorMsg = msg.toString();
 		return correct;
+	}
+	
+	public String getGitOwner() {
+		String gitOwner = "";
+		String owners = Game.getProperty("plm.github.owners");
+		for(String owner : owners.split(" , ")) {
+			String url = "https://github.com/" + owner + "/" + Game.getProperty("plm.github.repo");
+			if(GitUtils.repoExists(url)) {
+				gitOwner = owner;
+				break;
+			}
+		}
+		return gitOwner;
 	}
 }
