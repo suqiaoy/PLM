@@ -27,14 +27,23 @@ public class GitSpy implements ProgressSpyListener, UserSwitchesListener {
 	
 	private ProgressMonitor progress = NullProgressMonitor.INSTANCE; //new TextProgressMonitor(new PrintWriter(System.out));
 
-
-	private String repoUrl = Game.getProperty("plm.git.server.url"); // https://github.com/mquinson/PLM-data.git
+	private String repoUrls = Game.getProperty("plm.git.server.urls"); // https://github.com/[Buggles | mquinson]/PLM-data.git
+	private String repoUrl;
 	private File repoDir;
 
 	public GitSpy(File path, Users users) throws IOException, GitAPIException {
 		this.plmDir = path;
-
+		
 		gitUtils = new GitUtils();
+		
+		for(String url : repoUrls.split(",")) {
+			// TODO: check if repo exists and is accessible
+			if(gitUtils.repoExists(url)) {
+				System.out.println("Switching to "+url);
+				repoUrl = url;
+				break;
+			}
+		}
 		
 		users.addUserSwitchesListener(this);
 		userHasChanged(users.getCurrentUser());

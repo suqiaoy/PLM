@@ -29,6 +29,7 @@ import org.eclipse.jgit.api.errors.TransportException;
 import org.eclipse.jgit.api.errors.UnmergedPathsException;
 import org.eclipse.jgit.api.errors.WrongRepositoryStateException;
 import org.eclipse.jgit.errors.NoWorkTreeException;
+import org.eclipse.jgit.lib.Config;
 import org.eclipse.jgit.lib.ObjectId;
 import org.eclipse.jgit.lib.PersonIdent;
 import org.eclipse.jgit.lib.ProgressMonitor;
@@ -356,5 +357,17 @@ public class GitUtils {
 	
 	public Ref getRepoRef(String branch) throws IOException {
 		return git.getRepository().getRef(branch);
+	}
+
+	public boolean repoExists(String url) {
+		boolean success = true;
+		try {
+			Git.lsRemoteRepository().setRemote(url).call();
+		} catch (GitAPIException e) {
+			System.out.println(url+ " is not a valid repository...");
+			success = false;
+			e.printStackTrace();
+		}
+		return success;
 	}
 }
