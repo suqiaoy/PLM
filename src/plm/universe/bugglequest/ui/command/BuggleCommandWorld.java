@@ -16,7 +16,7 @@ public class BuggleCommandWorld extends CommandGridWorld {
 	
 	public BuggleCommandWorld(String initialJSON) {
 		super("default", 7, 7);
-		buggles.put("Noob",  new BuggleView("Noob", 0, 0, Direction.NORTH, Color.WHITE, Color.LIGHT_GRAY, false, false));
+		buggles.put("Noob", new BuggleView("Noob", 0, 0, Direction.NORTH, Color.BLACK, Color.LIGHT_GRAY, false, false));
 		// TODO: init world with JSON
 		setInitialWorld(new BuggleCommandWorld(this));
 		JFrame frame = new JFrame();

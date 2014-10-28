@@ -11,7 +11,7 @@ public class BuggleCommandWorldCell extends CommandGridWorldCell {
 	public static final Color DEFAULT_MSG_COLOR = new Color(0.5f,0.5f,0.9f);
 	public static final Color DEFAULT_BAGGLE_COLOR = new Color(0.82f,0.41f,0.12f);
 
-	private Color color;
+	private Color color = DEFAULT_COLOR;
 	private Color msgColor = DEFAULT_MSG_COLOR; 
 	private boolean hasBaggle;
 	private boolean hasContent = false;

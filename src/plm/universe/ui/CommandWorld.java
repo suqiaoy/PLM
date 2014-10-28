@@ -3,8 +3,6 @@ package plm.universe.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import plm.universe.IWorldView;
-
 public abstract class CommandWorld implements ICommandWorld {
 
 	private String name = "default";

@@ -33,6 +33,7 @@ import plm.core.model.lesson.Lecture;
 import plm.universe.Entity;
 import plm.universe.EntityControlPanel;
 import plm.universe.World;
+import plm.universe.bugglequest.BuggleWorld;
 import plm.universe.bugglequest.ui.command.BuggleCommandWorld;
 
 
@@ -93,9 +94,9 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 		if (Game.getInstance().getSelectedWorld() != null) {
 			worldView = Game.getInstance().getSelectedWorld().getView();
 			tabPane.addTab(i18n.tr("World"), null, worldView, i18n.tr("The world as it is right now"));
-			if(true)//Game.getInstance().getCurrentLesson().getCurrentExercise().getId().equals("")) {
-			{
-				new BuggleCommandWorld("Yop");
+			if(Game.getInstance().getSelectedWorld() instanceof BuggleWorld) {
+				BuggleWorld bw = (BuggleWorld) Game.getInstance().getSelectedWorld();
+				new BuggleCommandWorld(bw.toJSON());
 			}
 		}
 		if (Game.getInstance().getAnswerOfSelectedWorld() != null) {

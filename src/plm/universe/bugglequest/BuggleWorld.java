@@ -12,6 +12,9 @@ import javax.script.ScriptEngine;
 import javax.script.ScriptException;
 import javax.swing.ImageIcon;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+
 import plm.core.lang.ProgrammingLanguage;
 import plm.core.model.Game;
 import plm.core.ui.ResourcesCache;
@@ -332,6 +335,69 @@ public class BuggleWorld extends GridWorld {
 		}
 	}
 
+	public String toJSON() {
+		JSONObject json = new JSONObject();
+		json.put("BuggleWorld", getName());
+		json.put("height", getHeight());
+		json.put("width", getWidth());
+		
+		JSONArray arrayBuggles = new JSONArray();
+		for (Entity e : getEntities()) {
+			AbstractBuggle b = (AbstractBuggle) e;
+			
+			JSONObject jsonBuggle = new JSONObject();
+			jsonBuggle.put("name", b.getName());
+			jsonBuggle.put("x", b.getX());
+			jsonBuggle.put("y", b.getY());
+			
+			String direction = "";
+			
+			if (b.getDirection().equals(Direction.NORTH))
+				 direction = "north";
+			if (b.getDirection().equals(Direction.SOUTH)) 
+				direction = "south";
+			if (b.getDirection().equals(Direction.EAST)) 
+				direction = "east";
+			if (b.getDirection().equals(Direction.WEST)) 
+				direction = "west";
+			
+			jsonBuggle.put("direction", direction);
+			jsonBuggle.put("color", ColorMapper.color2name(b.getBodyColor()));
+			jsonBuggle.put("brushColor", ColorMapper.color2name(b.getBrushColor()));
+			
+			arrayBuggles.add(jsonBuggle);
+		}
+		json.put("buggles", arrayBuggles);
+		
+		JSONArray arrayCells = new JSONArray();
+		for (int x = 0; x < getWidth(); x++) {
+			for (int y = 0; y < getHeight(); y++) {
+				BuggleWorldCell cell = (BuggleWorldCell) getCell(x, y);
+
+				if ((!cell.getColor().equals(Color.white)) || cell.hasBaggle() || 
+						cell.hasLeftWall() || cell.hasTopWall() || cell.hasContent()
+						) {
+					JSONObject jsonCell = new JSONObject();
+					jsonCell.put("x", x);
+					jsonCell.put("y", y);
+					jsonCell.put("color", ColorMapper.color2name(cell.getColor()));
+					
+					jsonCell.put("hasBaggle", cell.hasBaggle());
+					jsonCell.put("hasBaggle", cell.hasTopWall());
+					jsonCell.put("hasBaggle", cell.hasLeftWall());
+					
+					if (cell.hasContent())
+						jsonCell.put("content", cell.getContent());
+
+					arrayCells.add(jsonCell);
+				}
+			}
+		}
+		json.put("cells", arrayCells);
+		
+		return json.toJSONString();
+	}
+	
 	@Override
 	public String toString() {
 		return super.toString(); 
