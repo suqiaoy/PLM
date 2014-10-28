@@ -11,11 +11,11 @@ public abstract class CommandWorld implements ICommandWorld {
 	private int currentState = -1;
 	
 	public CommandWorld(String name) {
-		this.name = name;
+		this.setName(name);
 	}
 	
 	public CommandWorld(CommandWorld cw) {
-		this.name = cw.name;
+		this.setName(cw.getName());
 		this.currentState = cw.currentState;
 		for(IOperation operation : cw.operations) {
 			operations.add(operation.copy());
@@ -45,7 +45,7 @@ public abstract class CommandWorld implements ICommandWorld {
 	}
 	
 	public void reset() {
-		name = initialWorld.name;
+		setName(initialWorld.getName());
 		operations.clear();
 		currentState = -1;
 	}
@@ -98,6 +98,14 @@ public abstract class CommandWorld implements ICommandWorld {
 
 	public void setInitialWorld(CommandWorld initialWorld) {
 		this.initialWorld = initialWorld;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 	
 	

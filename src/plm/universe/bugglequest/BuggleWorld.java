@@ -383,8 +383,8 @@ public class BuggleWorld extends GridWorld {
 					jsonCell.put("color", ColorMapper.color2name(cell.getColor()));
 					
 					jsonCell.put("hasBaggle", cell.hasBaggle());
-					jsonCell.put("hasBaggle", cell.hasTopWall());
-					jsonCell.put("hasBaggle", cell.hasLeftWall());
+					jsonCell.put("hasTopWall", cell.hasTopWall());
+					jsonCell.put("hasLeftWall", cell.hasLeftWall());
 					
 					if (cell.hasContent())
 						jsonCell.put("content", cell.getContent());

@@ -12,11 +12,11 @@ public class BuggleView {
 	private Direction direction;
 	private Color color;
 	private Color brushColor;
-	private boolean carryBaggle;
-	private boolean brushDown;
+	private boolean carryBaggle = false;
+	private boolean brushDown = false;
 	
 	public BuggleView(String name, int x, int y, Direction direction,
-			Color color, Color brushColor, boolean carryBaggle, boolean brushDown) {
+			Color color, Color brushColor) {
 		super();
 		this.name = name;
 		this.x = x;
@@ -24,12 +24,10 @@ public class BuggleView {
 		this.direction = direction;
 		this.color = color;
 		this.brushColor = brushColor;
-		this.carryBaggle = carryBaggle;
-		this.brushDown = brushDown;
 	}
 	
 	public BuggleView copy() {
-		return new BuggleView(name, x, y, direction.copy(), color, brushColor, carryBaggle, brushDown);
+		return new BuggleView(name, x, y, direction.copy(), color, brushColor);
 	}
 
 	public String getName() {

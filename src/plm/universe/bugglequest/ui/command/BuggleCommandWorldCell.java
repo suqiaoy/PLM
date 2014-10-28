@@ -16,31 +16,29 @@ public class BuggleCommandWorldCell extends CommandGridWorldCell {
 	private boolean hasBaggle;
 	private boolean hasContent = false;
 	private String content = "";
-	private boolean leftWall;
-	private boolean topWall;
+	private boolean hasLeftWall = false;
+	private boolean hasTopWall = false;
 	
 	public BuggleCommandWorldCell(CommandGridWorld w, int x, int y) {
 		super(w, x, y);
 	}
 
 	public BuggleCommandWorldCell(CommandGridWorld w, int x, int y,
-			Color color, Color msgColor, boolean hasBaggle, boolean hasContent, String content,
+			Color color, boolean hasBaggle, String content,
 			boolean leftWall, boolean topWall) {
 		super(w, x, y);
 		this.color = color;
-		this.msgColor = msgColor;
 		this.hasBaggle = hasBaggle;
-		this.hasContent = hasContent;
 		this.content = content;
-		this.leftWall = leftWall;
-		this.topWall = topWall;
+		this.hasLeftWall = leftWall;
+		this.hasTopWall = topWall;
 	}
 
 	@Override
 	public CommandGridWorldCell copy(CommandGridWorld world) {
 		return new BuggleCommandWorldCell(world, x, y,
-				color, msgColor, hasBaggle, hasContent, content,
-				leftWall, topWall);
+				color, hasBaggle, content,
+				hasLeftWall, hasTopWall);
 	}
 
 	public Color getColor() {
@@ -84,18 +82,18 @@ public class BuggleCommandWorldCell extends CommandGridWorldCell {
 	}
 
 	public boolean hasLeftWall() {
-		return leftWall;
+		return hasLeftWall;
 	}
 
 	public void setLeftWall(boolean leftWall) {
-		this.leftWall = leftWall;
+		this.hasLeftWall = leftWall;
 	}
 
 	public boolean hasTopWall() {
-		return topWall;
+		return hasTopWall;
 	}
 
 	public void setTopWall(boolean topWall) {
-		this.topWall = topWall;
+		this.hasTopWall = topWall;
 	}
 }

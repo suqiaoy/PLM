@@ -175,6 +175,12 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 			objectivesView = Game.getInstance().getAnswerOfSelectedWorld().getView();
 			tabPane.addTab(i18n.tr("Objective"), null, objectivesView, i18n.tr("The world as it should be"));
 		}
+		
+		if(Game.getInstance().getSelectedWorld() instanceof BuggleWorld) {
+			BuggleWorld bw = (BuggleWorld) Game.getInstance().getSelectedWorld();
+			new BuggleCommandWorld(bw.toJSON());
+		}
+		
 		// To refresh the controlPane in any case ( else the SortingWorldPanel is not refreshed )
 		controlPane.removeAll();
 		buttonPanel.dispose();
