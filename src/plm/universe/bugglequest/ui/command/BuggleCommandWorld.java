@@ -1,9 +1,20 @@
 package plm.universe.bugglequest.ui.command;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Container;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -14,12 +25,16 @@ import plm.core.model.Game;
 import plm.core.utils.ColorMapper;
 import plm.core.utils.InvalidColorNameException;
 import plm.universe.Direction;
+import plm.universe.bugglequest.ui.command.operations.ChangeBuggleDirection;
+import plm.universe.bugglequest.ui.command.operations.ChangeCellColor;
+import plm.universe.bugglequest.ui.command.operations.MoveBuggle;
 import plm.universe.ui.CommandGridWorld;
 import plm.universe.ui.CommandGridWorldCell;
 import plm.universe.ui.IOperation;
 
 public class BuggleCommandWorld extends CommandGridWorld {
 
+	protected JSlider slider;
 	protected HashMap<String, BuggleView> buggles = new HashMap<String, BuggleView>();
 	
 	public BuggleCommandWorld(String initialJSON) {
@@ -30,10 +45,65 @@ public class BuggleCommandWorld extends CommandGridWorld {
 		
 		// TODO: Improve interface
 		JFrame frame = new JFrame();
-		frame.getContentPane().add(new BuggleCommandWorldView(this));
+		
+		Container pane = frame.getContentPane();
+		pane.setLayout(new BorderLayout());
+		
+		JPanel controls = new JPanel();
+		JButton btnTeleport = new JButton();
+		btnTeleport.setText("Teleport");
+		btnTeleport.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JSONArray jsonCommands = new JSONArray();
+				for(String key : buggles.keySet()) {
+					BuggleView buggle = buggles.get(key);
+					int oldX = buggle.getX();
+					int oldY = buggle.getY();
+					int newX = (int) (Math.random() * getHeight());
+					int newY = (int) (Math.random() * getWidth());
+					
+					JSONObject jsonCommand = new JSONObject();
+					jsonCommand.put("cmd", "moveBuggle");
+					jsonCommand.put("name", key);
+					jsonCommand.put("oldX", oldX);
+					jsonCommand.put("oldY", oldY);
+					jsonCommand.put("newX", newX);
+					jsonCommand.put("newY", newY);
+					
+					jsonCommands.add(jsonCommand);
+				}
+				System.out.println("On tente: "+jsonCommands.toJSONString());
+				BuggleCommandWorld.this.receiveCmd(jsonCommands.toJSONString());
+			}
+			
+		});
+		
+		controls.add(btnTeleport);
+		
+		slider = new JSlider(-1, -1);
+		slider.addChangeListener(new ChangeListener() {
+			@Override
+			public void stateChanged(ChangeEvent e) {
+				int state = BuggleCommandWorld.this.slider.getValue();
+				BuggleCommandWorld.this.setState(state);
+			}
+			
+		});
+		
+		pane.add(slider, BorderLayout.NORTH);
+		pane.add(new BuggleCommandWorldView(this), BorderLayout.CENTER);
+		pane.add(controls, BorderLayout.SOUTH);
+		
 		frame.pack();
 		frame.setSize(400, 400);
 		frame.setVisible(true);
+	}
+	
+	public void receiveCmd(String JSONCommands) {
+		getOperationsList().add(cmdToOperations(JSONCommands));
+		slider.setMaximum(getCurrentState()+1);
+		slider.setValue(getCurrentState()+1);
 	}
 	
 	private void initWithJSON(String initialJSON) {
@@ -160,8 +230,68 @@ public class BuggleCommandWorld extends CommandGridWorld {
 	}
 
 	@Override
-	public IOperation cmdToOperations(String cmd) {
-		// TODO Auto-generated method stub
+	public List<IOperation> cmdToOperations(String JSONCommands) {
+		List<IOperation> operations = new ArrayList<IOperation>();
+		JSONParser parser = new JSONParser();
+		JSONArray arrayCommands = null;
+		try {
+			arrayCommands = (JSONArray) parser.parse(JSONCommands);
+		} catch (ParseException e) {
+			System.err.println(Game.i18n.tr("An error occurred while creating the view, please report the following error:"));
+			e.printStackTrace();
+			return null;
+		}
+		
+		for(Object obj : arrayCommands) {
+			JSONObject jsonCmd = (JSONObject) obj;
+			operations.add(jsonToOperation(jsonCmd));
+		}
+		
+		return operations;
+	}
+
+	private IOperation jsonToOperation(JSONObject jsonCmd) {
+		String cmd = getStringFromJSON(jsonCmd, "cmd");
+		
+		if(cmd.equals("moveBuggle")) {
+			String buggle = getStringFromJSON(jsonCmd, "name");
+			int oldX = getIntFromJSON(jsonCmd, "oldX");
+			int oldY = getIntFromJSON(jsonCmd, "oldY");
+			int newX = getIntFromJSON(jsonCmd, "newX");
+			int newY = getIntFromJSON(jsonCmd, "newY");
+			
+			return new MoveBuggle(buggles.get(buggle), oldX, oldY, newX, newY);
+		}
+		
+		if(cmd.equals("changeBuggleDirection")) {
+			String buggle = getStringFromJSON(jsonCmd, "buggle");
+			Direction oldDirection = (Direction) jsonCmd.get("oldDirection");
+			Direction newDirection = (Direction) jsonCmd.get("newDirection");
+		
+			return new ChangeBuggleDirection(buggles.get(buggle), oldDirection, newDirection);
+		}
+		
+		if(cmd.equals("changeCellColor")) {
+			int x = getIntFromJSON(jsonCmd, "x");
+			int y = getIntFromJSON(jsonCmd, "y");
+			Color oldColor = (Color) jsonCmd.get("oldColor");
+			Color newColor = (Color) jsonCmd.get("newColor");
+			
+			BuggleCommandWorldCell cell = (BuggleCommandWorldCell) cells[x][y];
+			
+			return new ChangeCellColor(cell, oldColor, newColor);
+		}
+		
+		/*
+		if(cmd.equals("displayError")) {
+			String title = getStringFromJSON(jsonCmd, "title");
+			String msg = getStringFromJSON(jsonCmd, "msg");
+			
+			return new DisplayError(title, msg);
+		}
+		*/
+		
+		// TODO: throw unknown command exception
 		return null;
 	}
 

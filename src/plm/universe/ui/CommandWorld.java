@@ -7,7 +7,7 @@ public abstract class CommandWorld implements ICommandWorld {
 
 	private String name = "default";
 	private CommandWorld initialWorld;
-	private List<IOperation> operations = new ArrayList<IOperation>();
+	private List<List<IOperation>> operationsList = new ArrayList<List<IOperation>>();
 	private int currentState = -1;
 	
 	public CommandWorld(String name) {
@@ -17,27 +17,29 @@ public abstract class CommandWorld implements ICommandWorld {
 	public CommandWorld(CommandWorld cw) {
 		this.setName(cw.getName());
 		this.currentState = cw.currentState;
-		for(IOperation operation : cw.operations) {
-			operations.add(operation.copy());
+		for(List<IOperation> operations : cw.operationsList) {
+			List<IOperation> operationsCopy = new ArrayList<IOperation>();
+			for(IOperation operation : operations) {
+				operationsCopy.add(operation.copy());
+			}
+			operationsList.add(operationsCopy);
 		}
-	}
-	
-	@Override
-	public void receiveCmd(String cmd) {
-		operations.add(cmdToOperations(cmd));
-		setState(currentState+1);
 	}
 	
 	@Override
 	public void setState(int state) {
 		if(state>currentState) {
 			for(int i = currentState+1; i<=state; i++) {
-				operations.get(i).exec();
+				for (IOperation operation : operationsList.get(i)) {
+					operation.exec();
+				}
 			}
 		}
 		else if(state<currentState) {
 			for(int i = currentState; i>state; i--) {
-				operations.get(i).undo();
+				for (IOperation operation : operationsList.get(i)) {
+					operation.undo();
+				}
 			}
 		}
 		currentState = state;
@@ -46,11 +48,11 @@ public abstract class CommandWorld implements ICommandWorld {
 	
 	public void reset() {
 		setName(initialWorld.getName());
-		operations.clear();
+		operationsList.clear();
 		currentState = -1;
 	}
 	
-	public abstract IOperation cmdToOperations(String cmd);
+	public abstract List<IOperation> cmdToOperations(String cmd);
 	
 	private ArrayList<ICommandWorldView> worldUpdatesListeners = new ArrayList<ICommandWorldView>();
 
@@ -74,14 +76,6 @@ public abstract class CommandWorld implements ICommandWorld {
 				v.notifyUpdate();
 			}
 		}
-	}
-	
-	public List<IOperation> getOperations() {
-		return operations;
-	}
-
-	public void setOperations(List<IOperation> operations) {
-		this.operations = operations;
 	}
 
 	public int getCurrentState() {
@@ -107,6 +101,12 @@ public abstract class CommandWorld implements ICommandWorld {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
+	public List<List<IOperation>> getOperationsList() {
+		return operationsList;
+	}
+
+	public void setOperationsList(List<List<IOperation>> operationsList) {
+		this.operationsList = operationsList;
+	}
 }

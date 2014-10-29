@@ -20,8 +20,6 @@ import plm.universe.bugglequest.AbstractBuggle;
 import plm.universe.bugglequest.BuggleWorld;
 import plm.universe.bugglequest.BuggleWorldCell;
 
-
-
 public class BuggleWorldView extends WorldView {
 
 	private static final long serialVersionUID = -7164642270965762239L;
@@ -46,7 +44,6 @@ public class BuggleWorldView extends WorldView {
 	protected double getPadY() {
 		return (getHeight() - getCellWidth() * ((BuggleWorld)world).getHeight()) / 2;
 	}
-
 
 	@Override
 	public void paintComponent(Graphics g) {
@@ -257,9 +254,6 @@ public class BuggleWorldView extends WorldView {
 		g.drawString(msg, (float) (padx+ox)+1, (float) (pady+oy)-4);	
 	}
 
-	
-
-	// old style ;b
 	private static int INVADER_SPRITE_SIZE = 11;
 	private static int[][][] INVADER_SPRITE = {
 	{

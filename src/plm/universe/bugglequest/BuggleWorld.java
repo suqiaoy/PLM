@@ -335,6 +335,7 @@ public class BuggleWorld extends GridWorld {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public String toJSON() {
 		JSONObject json = new JSONObject();
 		json.put("BuggleWorld", getName());

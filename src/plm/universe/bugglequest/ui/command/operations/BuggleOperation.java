@@ -18,6 +18,4 @@ public abstract class BuggleOperation implements IOperation {
 	public void setTarget(BuggleView target) {
 		this.target = target;
 	}
-	
-	
 }
