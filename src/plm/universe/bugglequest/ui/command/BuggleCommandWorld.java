@@ -124,9 +124,51 @@ public class BuggleCommandWorld extends CommandGridWorld {
 			}
 		});
 		
+		JButton btnChangeDirection= new JButton();
+		btnChangeDirection.setText("Change Direction");
+		btnChangeDirection.addActionListener(new ActionListener() {
+			@Override
+			@SuppressWarnings("unchecked")
+			public void actionPerformed(ActionEvent e) {
+				JSONArray jsonCommands = new JSONArray();
+				for(String key : buggles.keySet()) {
+					BuggleView buggle = buggles.get(key);
+					
+					String[] directions = {"north", "south", "east", "west" };
+					String newDirection = directions[(int) (Math.random() * directions.length)];
+					
+					Direction oldDirection = buggle.getDirection();
+					String oldDirectionAsStr = "";
+					if(oldDirection.intValue() == Direction.NORTH_VALUE) {
+						oldDirectionAsStr = "north";
+					}
+					else if(oldDirection.intValue() == Direction.SOUTH_VALUE) {
+						oldDirectionAsStr = "south";
+					}
+					else if(oldDirection.intValue() == Direction.EAST_VALUE) {
+						oldDirectionAsStr = "east";
+					}
+					else if(oldDirection.intValue() == Direction.WEST_VALUE) {
+						oldDirectionAsStr = "west";
+					}
+					
+					JSONObject jsonCommand = new JSONObject();
+					jsonCommand.put("cmd", "changeBuggleDirection");
+					jsonCommand.put("name", key);
+					jsonCommand.put("oldDirection", oldDirectionAsStr);
+					jsonCommand.put("newDirection", newDirection);
+					
+					jsonCommands.add(jsonCommand);
+				}
+				System.out.println("On tente: "+jsonCommands.toJSONString());
+				BuggleCommandWorld.this.receiveCmd(jsonCommands.toJSONString());
+			}
+		});
+		
 		controls.add(btnReset);
 		controls.add(btnTeleport);
 		controls.add(btnColorCell);
+		controls.add(btnChangeDirection);
 		
 		slider = new JSlider(-1, -1);
 		slider.addChangeListener(new ChangeListener() {
@@ -314,10 +356,38 @@ public class BuggleCommandWorld extends CommandGridWorld {
 		}
 		
 		if(cmd.equals("changeBuggleDirection")) {
-			String buggle = getStringFromJSON(jsonCmd, "buggle");
-			Direction oldDirection = (Direction) jsonCmd.get("oldDirection");
-			Direction newDirection = (Direction) jsonCmd.get("newDirection");
-		
+			String buggle = getStringFromJSON(jsonCmd, "name");
+			String oldDirectionAsStr = getStringFromJSON(jsonCmd, "oldDirection");
+			String newDirectionAsStr = getStringFromJSON(jsonCmd, "newDirection");
+			
+			Direction oldDirection = null;
+			if(oldDirectionAsStr.equalsIgnoreCase("north")) {
+				oldDirection = Direction.NORTH;
+			}
+			else if(oldDirectionAsStr.equalsIgnoreCase("south")) {
+				oldDirection = Direction.SOUTH;
+			}
+			else if(oldDirectionAsStr.equalsIgnoreCase("east")) {
+				oldDirection = Direction.EAST;
+			}
+			else if(oldDirectionAsStr.equalsIgnoreCase("west")) {
+				oldDirection = Direction.WEST;
+			}
+			
+			Direction newDirection = null;
+			if(newDirectionAsStr.equalsIgnoreCase("north")) {
+				newDirection = Direction.NORTH;
+			}
+			else if(newDirectionAsStr.equalsIgnoreCase("south")) {
+				newDirection = Direction.SOUTH;
+			}
+			else if(newDirectionAsStr.equalsIgnoreCase("east")) {
+				newDirection = Direction.EAST;
+			}
+			else if(newDirectionAsStr.equalsIgnoreCase("west")) {
+				newDirection = Direction.WEST;
+			}
+			
 			return new ChangeBuggleDirection(buggles.get(buggle), oldDirection, newDirection);
 		}
 		
