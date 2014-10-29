@@ -50,6 +50,16 @@ public class BuggleCommandWorld extends CommandGridWorld {
 		pane.setLayout(new BorderLayout());
 		
 		JPanel controls = new JPanel();
+		
+		JButton btnReset = new JButton();
+		btnReset.setText("Reset");
+		btnReset.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				BuggleCommandWorld.this.reset();
+			}
+		});
+		
 		JButton btnTeleport = new JButton();
 		btnTeleport.setText("Teleport");
 		btnTeleport.addActionListener(new ActionListener() {
@@ -114,6 +124,7 @@ public class BuggleCommandWorld extends CommandGridWorld {
 			}
 		});
 		
+		controls.add(btnReset);
 		controls.add(btnTeleport);
 		controls.add(btnColorCell);
 		
@@ -258,6 +269,9 @@ public class BuggleCommandWorld extends CommandGridWorld {
 		for(String key : bcw.buggles.keySet()) {
 			buggles.put(key, bcw.buggles.get(key).copy());
 		}
+
+		slider.setValue(-1);
+		slider.setMaximum(-1);
 	}
 
 	@Override
