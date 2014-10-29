@@ -54,6 +54,7 @@ public class BuggleCommandWorld extends CommandGridWorld {
 		btnTeleport.setText("Teleport");
 		btnTeleport.addActionListener(new ActionListener() {
 			@Override
+			@SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent e) {
 				JSONArray jsonCommands = new JSONArray();
 				for(String key : buggles.keySet()) {
@@ -79,7 +80,42 @@ public class BuggleCommandWorld extends CommandGridWorld {
 			
 		});
 		
+		JButton btnColorCell = new JButton();
+		btnColorCell.setText("Color cell");
+		btnColorCell.addActionListener(new ActionListener() {
+			@Override
+			@SuppressWarnings("unchecked")
+			public void actionPerformed(ActionEvent e) {
+				JSONArray jsonCommands = new JSONArray();
+				for(String key : buggles.keySet()) {
+					BuggleView buggle = buggles.get(key);
+					int x= buggle.getX();
+					int y = buggle.getY();
+					
+					BuggleCommandWorldCell bcwc = (BuggleCommandWorldCell) BuggleCommandWorld.this.cells[x][y];
+					
+					Color oldColor = bcwc.getColor();
+					String oldColorName = ColorMapper.color2name(oldColor);
+					
+					String[] colorsName = {"white", "black", "red", "cyan", "blue", "green", "orange", "magenta", "gray"};
+					String newColorName = colorsName[(int) (Math.random() * colorsName.length)];
+				
+					JSONObject jsonCommand = new JSONObject();
+					jsonCommand.put("cmd", "changeCellColor");
+					jsonCommand.put("x", x);
+					jsonCommand.put("y", y);
+					jsonCommand.put("oldColor", oldColorName);
+					jsonCommand.put("newColor", newColorName);
+					
+					jsonCommands.add(jsonCommand);
+				}
+				System.out.println("On tente: "+jsonCommands.toJSONString());
+				BuggleCommandWorld.this.receiveCmd(jsonCommands.toJSONString());
+			}
+		});
+		
 		controls.add(btnTeleport);
+		controls.add(btnColorCell);
 		
 		slider = new JSlider(-1, -1);
 		slider.addChangeListener(new ChangeListener() {
@@ -102,8 +138,8 @@ public class BuggleCommandWorld extends CommandGridWorld {
 	
 	public void receiveCmd(String JSONCommands) {
 		getOperationsList().add(cmdToOperations(JSONCommands));
-		slider.setMaximum(getCurrentState()+1);
-		slider.setValue(getCurrentState()+1);
+		slider.setMaximum(slider.getMaximum()+1);
+		slider.setValue(slider.getMaximum());
 	}
 	
 	private void initWithJSON(String initialJSON) {
@@ -274,8 +310,20 @@ public class BuggleCommandWorld extends CommandGridWorld {
 		if(cmd.equals("changeCellColor")) {
 			int x = getIntFromJSON(jsonCmd, "x");
 			int y = getIntFromJSON(jsonCmd, "y");
-			Color oldColor = (Color) jsonCmd.get("oldColor");
-			Color newColor = (Color) jsonCmd.get("newColor");
+			
+			String oldColorName = getStringFromJSON(jsonCmd, "oldColor");
+			String newColorName = getStringFromJSON(jsonCmd, "newColor");
+			
+			Color oldColor = null;
+			Color newColor = null;
+			try {
+				oldColor = ColorMapper.name2color(oldColorName);
+				newColor = ColorMapper.name2color(newColorName);
+			} catch (InvalidColorNameException e) {
+				System.err.println(Game.i18n.tr("An error occured while retrieving the color from its name to display it, please report the following error"));
+				e.printStackTrace();
+				return null;
+			}
 			
 			BuggleCommandWorldCell cell = (BuggleCommandWorldCell) cells[x][y];
 			
