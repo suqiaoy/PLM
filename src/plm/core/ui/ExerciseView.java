@@ -30,11 +30,15 @@ import plm.core.model.Game;
 import plm.core.model.lesson.Exercise;
 import plm.core.model.lesson.Exercise.WorldKind;
 import plm.core.model.lesson.Lecture;
+import plm.universe.Bridge;
 import plm.universe.Entity;
 import plm.universe.EntityControlPanel;
+import plm.universe.IConverter;
+import plm.universe.ISender;
 import plm.universe.World;
 import plm.universe.bugglequest.BuggleWorld;
-import plm.universe.bugglequest.ui.command.BuggleCommandWorld;
+import plm.universe.bugglequest.ui.command.JSONConverter;
+import plm.universe.bugglequest.ui.command.LocalSender;
 
 
 public class ExerciseView extends JPanel implements GameListener, HumanLangChangesListener {
@@ -43,7 +47,8 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 	private Game game;
 	private WorldView worldView;
 	private WorldView objectivesView;
-
+	private Bridge bridge;
+	
 	private JComboBox<Entity> entityComboBox;
 	private JComboBox<World> worldComboBox;
 	private EntityControlPanel buttonPanel;
@@ -96,7 +101,12 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 			tabPane.addTab(i18n.tr("World"), null, worldView, i18n.tr("The world as it is right now"));
 			if(Game.getInstance().getSelectedWorld() instanceof BuggleWorld) {
 				BuggleWorld bw = (BuggleWorld) Game.getInstance().getSelectedWorld();
-				new BuggleCommandWorld(bw.toJSON());
+				ISender sender = new LocalSender(bw.toJSON());
+				IConverter converter = new JSONConverter();
+				if(bridge != null) {
+					bridge.dispose();
+				}
+				bridge = new Bridge(bw, converter, sender);
 			}
 		}
 		if (Game.getInstance().getAnswerOfSelectedWorld() != null) {
@@ -178,7 +188,12 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 		
 		if(Game.getInstance().getSelectedWorld() instanceof BuggleWorld) {
 			BuggleWorld bw = (BuggleWorld) Game.getInstance().getSelectedWorld();
-			new BuggleCommandWorld(bw.toJSON());
+			ISender sender = new LocalSender(bw.toJSON());
+			IConverter converter = new JSONConverter();
+			if(bridge != null) {
+				bridge.dispose();
+			}
+			bridge = new Bridge(bw, converter, sender);
 		}
 		
 		// To refresh the controlPane in any case ( else the SortingWorldPanel is not refreshed )

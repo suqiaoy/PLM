@@ -95,4 +95,13 @@ public abstract class CommandGridWorld extends CommandWorld {
 	public void setVisibleGrid(boolean s) {
 		visibleGrid=s;
 	}
+
+	public void dispose() {
+		super.dispose();
+		for(int i=0; i<sizeX; i++) {
+			for(int j=0; j<sizeY; j++) {
+				cells[i][j].dispose();
+			}
+		}
+	}
 }

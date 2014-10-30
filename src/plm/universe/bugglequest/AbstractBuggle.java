@@ -8,6 +8,7 @@ import java.io.IOException;
 import plm.core.model.Game;
 import plm.core.utils.ColorMapper;
 import plm.core.utils.InvalidColorNameException;
+import plm.universe.Bridge;
 import plm.universe.Direction;
 import plm.universe.Entity;
 import plm.universe.GridWorld;
@@ -136,6 +137,37 @@ public abstract class AbstractBuggle extends Entity {
 
 	public void setDirection(Direction direction) {
 		if (direction != null) {
+			String oldDirection = "";
+			String newDirection = "";
+			
+			if(this.direction.intValue() == Direction.NORTH_VALUE) {
+				oldDirection = "north";
+			}
+			else if(this.direction.intValue() == Direction.SOUTH_VALUE) {
+				oldDirection = "south";
+			}
+			else if(this.direction.intValue() == Direction.EAST_VALUE) {
+				oldDirection= "east";
+			}
+			else if(this.direction.intValue() == Direction.WEST_VALUE) {
+				oldDirection = "west";
+			}
+			
+			if(direction.intValue() == Direction.NORTH_VALUE) {
+				newDirection = "north";
+			}
+			else if(direction.intValue() == Direction.SOUTH_VALUE) {
+				newDirection = "south";
+			}
+			else if(direction.intValue() == Direction.EAST_VALUE) {
+				newDirection= "east";
+			}
+			else if(direction.intValue() == Direction.WEST_VALUE) {
+				newDirection = "west";
+			}
+			
+			Bridge.getInstance().addCommand("changeBuggleDirection", name, oldDirection, newDirection);
+			
 			this.direction = direction;
 			stepUI();
 		}
@@ -317,10 +349,21 @@ public abstract class AbstractBuggle extends Entity {
 
 			throw new BuggleWallException();
 
+		int oldX = x;
+		int oldY = y;
+		
+		Bridge.getInstance().addCommand("moveBuggle", name, oldX+"", oldY+"", newx+"", newy+"");
+		
 		x = newx;
 		y = newy;
 
 		if (brushDown) {
+			Color oldColor = getCell().getColor();
+			
+			String oldColorName = ColorMapper.color2name(oldColor);
+			String newColorName = ColorMapper.color2name(brushColor);
+			
+			Bridge.getInstance().addCommand("changeCellColor", oldColorName, newColorName);
 			getCell().setColor(brushColor);
 		}
 

@@ -37,4 +37,8 @@ public abstract class CommandGridWorldCell {
 	public void setWorld(CommandGridWorld w) {
 		this.world = w;
 	}
+
+	public void dispose() {
+		world = null;
+	}
 }

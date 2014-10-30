@@ -31,6 +31,7 @@ public abstract class Entity extends Observable {
 	public Entity(String name) {
 		this.name=name;
 	}
+	
 	public Entity(String name, World w) {
 		this.name=name;
 		if (w != null)
@@ -48,7 +49,7 @@ public abstract class Entity extends Observable {
 	public World getWorld() {
 		return world;
 	}
-
+	
 	/** Ideally, this should be used only from world.addEntity() */
 	protected void setWorld(World world) {
 		this.world = world;

@@ -109,4 +109,14 @@ public abstract class CommandWorld implements ICommandWorld {
 	public void setOperationsList(List<List<IOperation>> operationsList) {
 		this.operationsList = operationsList;
 	}
+	
+	public void dispose() {
+		for(List<IOperation> operations : operationsList) {
+			operations.clear();
+		}
+		operationsList.clear();
+		for (ICommandWorldView v : this.worldUpdatesListeners) {
+			v.dispose();
+		}
+	}
 }
