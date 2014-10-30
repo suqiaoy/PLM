@@ -363,7 +363,7 @@ public abstract class AbstractBuggle extends Entity {
 			String oldColorName = ColorMapper.color2name(oldColor);
 			String newColorName = ColorMapper.color2name(brushColor);
 			
-			Bridge.getInstance().addCommand("changeCellColor", oldColorName, newColorName);
+			Bridge.getInstance().addCommand("changeCellColor", x+"", y+"", oldColorName, newColorName);
 			getCell().setColor(brushColor);
 		}
 
