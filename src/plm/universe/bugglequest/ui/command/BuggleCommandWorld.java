@@ -71,8 +71,8 @@ public class BuggleCommandWorld extends CommandGridWorld {
 					BuggleView buggle = buggles.get(key);
 					int oldX = buggle.getX();
 					int oldY = buggle.getY();
-					int newX = (int) (Math.random() * getHeight());
-					int newY = (int) (Math.random() * getWidth());
+					int newX = (int) (Math.random() * getWidth());
+					int newY = (int) (Math.random() * getHeight());
 					
 					JSONObject jsonCommand = new JSONObject();
 					jsonCommand.put("cmd", "moveBuggle");
