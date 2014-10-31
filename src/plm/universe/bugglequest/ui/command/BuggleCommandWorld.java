@@ -106,6 +106,7 @@ public class BuggleCommandWorld extends CommandGridWorld {
 			int x = getIntFromJSON(jsonCell, "x");
 			int y = getIntFromJSON(jsonCell, "y");
 			String colorAsStr = getStringFromJSON(jsonCell, "color");
+			boolean hasContent = (boolean) jsonCell.get("hasContent");
 			String content = getStringFromJSON(jsonCell, "content");
 			boolean hasBaggle = getBoolFromJSON(jsonCell, "hasBaggle");
 			boolean hasLeftWall = getBoolFromJSON(jsonCell, "hasLeftWall");
@@ -119,7 +120,7 @@ public class BuggleCommandWorld extends CommandGridWorld {
 				e.printStackTrace();
 				return;
 			}
-			this.setCell(new BuggleCommandWorldCell(this, x, y, color, hasBaggle, content, hasLeftWall, hasTopWall), x, y); 
+			this.setCell(new BuggleCommandWorldCell(this, x, y, color, hasBaggle, hasContent, content, hasLeftWall, hasTopWall), x, y); 
 		}
 	}
 

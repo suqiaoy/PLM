@@ -118,5 +118,6 @@ public abstract class CommandWorld implements ICommandWorld {
 		for (ICommandWorldView v : this.worldUpdatesListeners) {
 			v.dispose();
 		}
+		this.worldUpdatesListeners.clear();
 	}
 }

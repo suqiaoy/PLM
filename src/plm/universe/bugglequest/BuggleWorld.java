@@ -365,7 +365,6 @@ public class BuggleWorld extends GridWorld {
 			jsonBuggle.put("direction", direction);
 			jsonBuggle.put("color", ColorMapper.color2name(b.getBodyColor()));
 			jsonBuggle.put("brushColor", ColorMapper.color2name(b.getBrushColor()));
-			
 			arrayBuggles.add(jsonBuggle);
 		}
 		json.put("buggles", arrayBuggles);
@@ -387,6 +386,7 @@ public class BuggleWorld extends GridWorld {
 					jsonCell.put("hasTopWall", cell.hasTopWall());
 					jsonCell.put("hasLeftWall", cell.hasLeftWall());
 					
+					jsonCell.put("hasContent", cell.hasContent());
 					if (cell.hasContent())
 						jsonCell.put("content", cell.getContent());
 

@@ -24,11 +24,12 @@ public class BuggleCommandWorldCell extends CommandGridWorldCell {
 	}
 
 	public BuggleCommandWorldCell(CommandGridWorld w, int x, int y,
-			Color color, boolean hasBaggle, String content,
+			Color color, boolean hasBaggle, boolean hasContent, String content,
 			boolean leftWall, boolean topWall) {
 		super(w, x, y);
 		this.color = color;
 		this.hasBaggle = hasBaggle;
+		this.hasContent = hasContent;
 		this.content = content;
 		this.hasLeftWall = leftWall;
 		this.hasTopWall = topWall;
@@ -37,7 +38,7 @@ public class BuggleCommandWorldCell extends CommandGridWorldCell {
 	@Override
 	public CommandGridWorldCell copy(CommandGridWorld world) {
 		return new BuggleCommandWorldCell(world, x, y,
-				color, hasBaggle, content,
+				color, hasBaggle, hasContent, content,
 				hasLeftWall, hasTopWall);
 	}
 
