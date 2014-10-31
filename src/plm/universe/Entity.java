@@ -24,6 +24,7 @@ public abstract class Entity extends Observable {
 
 	protected World world;
 
+	private Bridge bridge;
 	private Semaphore oneStepSemaphore = new Semaphore(0);
 
 	public Entity() {}
@@ -46,6 +47,14 @@ public abstract class Entity extends Observable {
 		this.name = name;
 	}	
 
+	public Bridge getBridge() {
+		return bridge;
+	}
+	
+	public void setBridge(Bridge bridge) {
+		this.bridge = bridge;
+	}
+	
 	public World getWorld() {
 		return world;
 	}

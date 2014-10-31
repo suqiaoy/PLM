@@ -166,7 +166,7 @@ public abstract class AbstractBuggle extends Entity {
 				newDirection = "west";
 			}
 			
-			Bridge.getInstance().addCommand("changeBuggleDirection", name, oldDirection, newDirection);
+			getBridge().addCommand("changeBuggleDirection", name, oldDirection, newDirection);
 			
 			this.direction = direction;
 			stepUI();
@@ -352,7 +352,7 @@ public abstract class AbstractBuggle extends Entity {
 		int oldX = x;
 		int oldY = y;
 		
-		Bridge.getInstance().addCommand("moveBuggle", name, oldX+"", oldY+"", newx+"", newy+"");
+		getBridge().addCommand("moveBuggle", name, oldX+"", oldY+"", newx+"", newy+"");
 		
 		x = newx;
 		y = newy;
@@ -363,7 +363,7 @@ public abstract class AbstractBuggle extends Entity {
 			String oldColorName = ColorMapper.color2name(oldColor);
 			String newColorName = ColorMapper.color2name(brushColor);
 			
-			Bridge.getInstance().addCommand("changeCellColor", x+"", y+"", oldColorName, newColorName);
+			getBridge().addCommand("changeCellColor", x+"", y+"", oldColorName, newColorName);
 			getCell().setColor(brushColor);
 		}
 

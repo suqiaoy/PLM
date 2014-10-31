@@ -159,6 +159,8 @@ public abstract class World {
 			Thread runner = new Thread(new Runnable() {
 				public void run() {
 					Game.getInstance().statusArgAdd(getName());
+					b.setBridge(Game.getInstance().getBridge());
+					b.getBridge().setWorld(World.this);
 					pl.runEntity(b, progress);
 					Game.getInstance().statusArgRemove(getName());
 				}

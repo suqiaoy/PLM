@@ -62,9 +62,15 @@ import plm.core.model.tracking.ProgressSpyListener;
 import plm.core.model.tracking.ServerSpyAppEngine;
 import plm.core.ui.MainFrame;
 import plm.core.utils.FileUtils;
+import plm.universe.Bridge;
 import plm.universe.Entity;
+import plm.universe.IConverter;
+import plm.universe.ISender;
 import plm.universe.IWorldView;
 import plm.universe.World;
+import plm.universe.bugglequest.BuggleWorld;
+import plm.universe.bugglequest.ui.command.JSONConverter;
+import plm.universe.bugglequest.ui.command.LocalSender;
 
 /*
  *  core model which contains all known exercises.
@@ -95,7 +101,8 @@ public class Game implements IWorldView {
 	private Lesson currentLesson;
 	private Course currentCourse;
 	private Lecture lastExercise;
-
+	private Bridge bridge;
+	
 	public static final String [][] humanLangs = { {"English","en"}, {"Francais","fr"}, {"Italiano","it"}, {"Português brasileiro", "pt_BR"} };
 
 	public static final ProgrammingLanguage JAVA =       new LangJava();
@@ -499,6 +506,16 @@ public class Game implements IWorldView {
 				exo.reset();
 				setSelectedWorld(exo.getWorld(0));
 
+				if(getSelectedWorld() instanceof BuggleWorld) {
+					BuggleWorld bw = (BuggleWorld) Game.getInstance().getSelectedWorld();
+					ISender sender = new LocalSender(bw.toJSON());
+					IConverter converter = new JSONConverter();
+					if(bridge != null) {
+						bridge.dispose();
+					}
+					bridge = new Bridge(converter, sender);
+				}
+				
 				ProgrammingLanguage fallback = null;
 				for (ProgrammingLanguage l:exo.getProgLanguages()) {
 					if (l.equals(programmingLanguage))
@@ -635,6 +652,7 @@ public class Game implements IWorldView {
 		Lecture lecture = this.currentLesson.getCurrentExercise();
 		if (lecture instanceof Exercise) {
 			((Exercise) lecture).reset();
+			bridge.reset();
 			fireCurrentExerciseChanged(lecture);
 		}
 	}
@@ -1220,5 +1238,9 @@ public class Game implements IWorldView {
 		for (ProgressSpyListener l : this.progressSpyListeners) {
 			l.reverted(ex);
 		}
+	}
+	
+	public Bridge getBridge() {
+		return bridge;
 	}
 }

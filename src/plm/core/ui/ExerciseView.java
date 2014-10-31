@@ -47,7 +47,6 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 	private Game game;
 	private WorldView worldView;
 	private WorldView objectivesView;
-	private Bridge bridge;
 	
 	private JComboBox<Entity> entityComboBox;
 	private JComboBox<World> worldComboBox;
@@ -99,15 +98,6 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 		if (Game.getInstance().getSelectedWorld() != null) {
 			worldView = Game.getInstance().getSelectedWorld().getView();
 			tabPane.addTab(i18n.tr("World"), null, worldView, i18n.tr("The world as it is right now"));
-			if(Game.getInstance().getSelectedWorld() instanceof BuggleWorld) {
-				BuggleWorld bw = (BuggleWorld) Game.getInstance().getSelectedWorld();
-				ISender sender = new LocalSender(bw.toJSON());
-				IConverter converter = new JSONConverter();
-				if(bridge != null) {
-					bridge.dispose();
-				}
-				bridge = new Bridge(bw, converter, sender);
-			}
 		}
 		if (Game.getInstance().getAnswerOfSelectedWorld() != null) {
 			objectivesView = Game.getInstance().getAnswerOfSelectedWorld().getView();
@@ -184,16 +174,6 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 			tabPane.addTab(i18n.tr("World"), null, worldView, i18n.tr("The world as it is right now"));
 			objectivesView = Game.getInstance().getAnswerOfSelectedWorld().getView();
 			tabPane.addTab(i18n.tr("Objective"), null, objectivesView, i18n.tr("The world as it should be"));
-		}
-		
-		if(Game.getInstance().getSelectedWorld() instanceof BuggleWorld) {
-			BuggleWorld bw = (BuggleWorld) Game.getInstance().getSelectedWorld();
-			ISender sender = new LocalSender(bw.toJSON());
-			IConverter converter = new JSONConverter();
-			if(bridge != null) {
-				bridge.dispose();
-			}
-			bridge = new Bridge(bw, converter, sender);
 		}
 		
 		// To refresh the controlPane in any case ( else the SortingWorldPanel is not refreshed )
