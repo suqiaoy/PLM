@@ -34,7 +34,9 @@ public class Bridge implements IWorldView {
 	public void dispose() {
 		converter.dispose();
 		sender.dispose();
-		w.removeWorldUpdatesListener(this);
+		if(w !=null) {
+			w.removeWorldUpdatesListener(this);
+		}
 	}
 
 	public void reset() {

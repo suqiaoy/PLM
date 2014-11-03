@@ -155,12 +155,14 @@ public abstract class World {
 		if (Game.getInstance().isDebugEnabled())
 			Logger.log("World:runEntities","Programming language: "+pl);
 		
+		Game.getInstance().getBridge().setWorld(this);
+		Game.getInstance().getBridge().reset();
+		
 		for (final Entity b : entities) {
+			b.setBridge(Game.getInstance().getBridge());
 			Thread runner = new Thread(new Runnable() {
 				public void run() {
 					Game.getInstance().statusArgAdd(getName());
-					b.setBridge(Game.getInstance().getBridge());
-					b.getBridge().setWorld(World.this);
 					pl.runEntity(b, progress);
 					Game.getInstance().statusArgRemove(getName());
 				}

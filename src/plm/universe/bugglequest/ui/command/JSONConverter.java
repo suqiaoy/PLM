@@ -20,7 +20,6 @@ public class JSONConverter implements IConverter {
 			try {
 				jsonCommands = arrayCommands.toJSONString();
 				arrayCommands.clear();
-				System.out.println("On va envoyer: "+jsonCommands);
 			}
 			finally {
 				mutex.release();
