@@ -56,6 +56,20 @@ public class JSONConverter implements IConverter {
 					jsonCommand.put("oldColor", args[2]);
 					jsonCommand.put("newColor", args[3]);
 				}
+				else if(cmdName.equals("changeCellHasBaggle")) {
+					jsonCommand.put("x", args[0]);
+					jsonCommand.put("y", args[1]);
+					jsonCommand.put("oldHasBaggle", args[2]);
+					jsonCommand.put("newHasBaggle", args[3]);
+				}
+				else if(cmdName.equals("changeCellContent")) {
+					jsonCommand.put("x", args[0]);
+					jsonCommand.put("y", args[1]);
+					jsonCommand.put("oldHasContent", args[2]);
+					jsonCommand.put("newHasContent", args[3]);
+					jsonCommand.put("oldContent", args[4]);
+					jsonCommand.put("newContent", args[5]);
+				}
 				else {
 					// TODO: throw error
 					return;

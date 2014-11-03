@@ -396,6 +396,9 @@ public abstract class AbstractBuggle extends Entity {
 			throw new NoBaggleUnderBuggleException(Game.i18n.tr("There is no baggle to pick up here."));
 		if (isCarryingBaggle())
 			throw new AlreadyHaveBaggleException(Game.i18n.tr("Your are already carrying a baggle."));
+		
+		getBridge().addCommand("changeCellHasBaggle", x+"", y+"", true+"", false+"");
+		
 		getCellFromLesson(this.x, this.y).baggleRemove();
 		carryBaggle = true;
 	}
@@ -403,6 +406,13 @@ public abstract class AbstractBuggle extends Entity {
 	public void dropBaggle() throws AlreadyHaveBaggleException, DontHaveBaggleException {
 		if (! isCarryingBaggle())
 			throw new DontHaveBaggleException();
+		
+		boolean oldHasBaggle = false;
+		if (isOverBaggle()) {
+			oldHasBaggle = true;
+		}
+		getBridge().addCommand("changeCellHasBaggle", x+"", y+"", oldHasBaggle+"", true+"");
+		
 		getCellFromLesson(this.x, this.y).baggleAdd();
 		carryBaggle = false;
 	}
@@ -412,6 +422,7 @@ public abstract class AbstractBuggle extends Entity {
 	}
 
 	public void writeMessage(String msg) {
+		getBridge().addCommand("changeCellContent", x+"", y+"", getCell().hasContent()+"", true+"", getCell().getContent(), msg);
 		getCell().addContent(msg);
 	}
 	public void writeMessage(int nb) {
@@ -423,6 +434,7 @@ public abstract class AbstractBuggle extends Entity {
 	}
 
 	public void clearMessage() {
+		getBridge().addCommand("changeCellContent", x+"", y+"", getCell().hasContent()+"", false+"", getCell().getContent(), "");
 		getCell().emptyContent();
 	}
 

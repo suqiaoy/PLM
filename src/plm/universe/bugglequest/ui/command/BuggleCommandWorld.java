@@ -16,6 +16,8 @@ import plm.core.utils.InvalidColorNameException;
 import plm.universe.Direction;
 import plm.universe.bugglequest.ui.command.operations.ChangeBuggleDirection;
 import plm.universe.bugglequest.ui.command.operations.ChangeCellColor;
+import plm.universe.bugglequest.ui.command.operations.ChangeCellContent;
+import plm.universe.bugglequest.ui.command.operations.ChangeCellHasBaggle;
 import plm.universe.bugglequest.ui.command.operations.MoveBuggle;
 import plm.universe.ui.CommandGridWorld;
 import plm.universe.ui.CommandGridWorldCell;
@@ -125,7 +127,11 @@ public class BuggleCommandWorld extends CommandGridWorld {
 	}
 
 	private boolean getBoolFromJSON(JSONObject json, String key) {
-		return (boolean) json.get(key);
+		String boolAsString = getStringFromJSON(json, key);
+		if(boolAsString.equalsIgnoreCase("true")) {
+			return true;
+		}
+		return false;
 	}
 
 	private int getIntFromJSON(JSONObject json, String key) {
@@ -253,6 +259,30 @@ public class BuggleCommandWorld extends CommandGridWorld {
 			return new ChangeCellColor(cell, oldColor, newColor);
 		}
 		
+		if(cmd.equals("changeCellHasBaggle")) {
+			int x = getIntFromJSON(jsonCmd, "x");
+			int y = getIntFromJSON(jsonCmd, "y");
+			
+			boolean oldHasBaggle = getBoolFromJSON(jsonCmd, "oldHasBaggle");
+			boolean newHasBaggle = getBoolFromJSON(jsonCmd, "newHasBaggle");
+			
+			BuggleCommandWorldCell cell = (BuggleCommandWorldCell) cells[x][y];
+			return new ChangeCellHasBaggle(cell, oldHasBaggle, newHasBaggle);
+		}
+		
+		if(cmd.equals("changeCellContent")) {
+			int x = getIntFromJSON(jsonCmd, "x");
+			int y = getIntFromJSON(jsonCmd, "y");
+			
+			boolean oldHasContent = getBoolFromJSON(jsonCmd, "oldHasContent");
+			boolean newHasContent = getBoolFromJSON(jsonCmd, "newHasContent");
+			
+			String oldContent = getStringFromJSON(jsonCmd, "oldContent");
+			String newContent = getStringFromJSON(jsonCmd, "newContent");
+		
+			BuggleCommandWorldCell cell = (BuggleCommandWorldCell) cells[x][y];
+			return new ChangeCellContent(cell, oldHasContent, newHasContent, oldContent, newContent);
+		}
 		/*
 		if(cmd.equals("displayError")) {
 			String title = getStringFromJSON(jsonCmd, "title");
