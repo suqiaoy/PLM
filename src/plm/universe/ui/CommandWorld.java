@@ -52,8 +52,6 @@ public abstract class CommandWorld implements ICommandWorld {
 		currentState = -1;
 	}
 	
-	public abstract List<IOperation> cmdToOperations(String cmd);
-	
 	private ArrayList<ICommandWorldView> worldUpdatesListeners = new ArrayList<ICommandWorldView>();
 
 	public void addWorldUpdatesListener(ICommandWorldView v) {

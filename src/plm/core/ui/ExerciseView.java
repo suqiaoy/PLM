@@ -30,15 +30,9 @@ import plm.core.model.Game;
 import plm.core.model.lesson.Exercise;
 import plm.core.model.lesson.Exercise.WorldKind;
 import plm.core.model.lesson.Lecture;
-import plm.universe.Bridge;
 import plm.universe.Entity;
 import plm.universe.EntityControlPanel;
-import plm.universe.IConverter;
-import plm.universe.ISender;
 import plm.universe.World;
-import plm.universe.bugglequest.BuggleWorld;
-import plm.universe.bugglequest.ui.command.JSONConverter;
-import plm.universe.bugglequest.ui.command.LocalSender;
 
 
 public class ExerciseView extends JPanel implements GameListener, HumanLangChangesListener {

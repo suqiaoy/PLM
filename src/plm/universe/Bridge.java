@@ -1,14 +1,17 @@
 package plm.universe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Bridge implements IWorldView {
 	
 	private World w;
-	private IConverter converter;
 	private ISender sender;
+	private List<Command> commands;
 	
-	public Bridge(IConverter converter, ISender sender) {
-		this.converter = converter;
+	public Bridge(ISender sender) {
 		this.sender = sender;
+		this.commands = new ArrayList<Command>();
 	}
 
 	public void setWorld(World w) {
@@ -16,14 +19,18 @@ public class Bridge implements IWorldView {
 		w.addWorldUpdatesListener(this);
 	}
 	
-	public void addCommand(String cmdName, String... args) {
-		converter.addCommand(cmdName, args);
+	public void addCommand(String cmdName, Object... args) {
+		synchronized (commands) {
+			commands.add(new Command(cmdName, args));
+		}
 	}
 	
 	@Override
 	public void worldHasMoved() {
-		String cmds = converter.getCommandsString();
-		sender.send(cmds);
+		synchronized (commands) {
+			sender.send(commands);
+			commands.clear();
+		}
 	}
 
 	@Override
@@ -32,7 +39,6 @@ public class Bridge implements IWorldView {
 	}
 
 	public void dispose() {
-		converter.dispose();
 		sender.dispose();
 		if(w !=null) {
 			w.removeWorldUpdatesListener(this);

@@ -13,6 +13,7 @@ import org.json.simple.parser.ParseException;
 import plm.core.model.Game;
 import plm.core.utils.ColorMapper;
 import plm.core.utils.InvalidColorNameException;
+import plm.universe.Command;
 import plm.universe.Direction;
 import plm.universe.bugglequest.ui.command.operations.ChangeBuggleDirection;
 import plm.universe.bugglequest.ui.command.operations.ChangeCellColor;
@@ -33,11 +34,7 @@ public class BuggleCommandWorld extends CommandGridWorld {
 		initWithJSON(initialJSON);
 		setInitialWorld(new BuggleCommandWorld(this));
 	}
-	
-	public void receiveCmd(String JSONCommands) {
-		getOperationsList().add(cmdToOperations(JSONCommands));
-	}
-	
+
 	private void initWithJSON(String initialJSON) {
 		JSONParser parser = new JSONParser();
 		JSONObject json = null;
@@ -167,138 +164,82 @@ public class BuggleCommandWorld extends CommandGridWorld {
 	}
 
 	@Override
-	public List<IOperation> cmdToOperations(String JSONCommands) {
+	public void receiveCmds(List<Command> commands) {
 		List<IOperation> operations = new ArrayList<IOperation>();
-		JSONParser parser = new JSONParser();
-		JSONArray arrayCommands = null;
-		try {
-			arrayCommands = (JSONArray) parser.parse(JSONCommands);
-		} catch (ParseException e) {
-			System.err.println(Game.i18n.tr("An error occurred while creating the view, please report the following error:"));
-			e.printStackTrace();
-			return null;
+
+		for(Command cmd : commands) {
+			operations.add(cmdToOperation(cmd));
 		}
 		
-		for(Object obj : arrayCommands) {
-			JSONObject jsonCmd = (JSONObject) obj;
-			operations.add(jsonToOperation(jsonCmd));
-		}
-		
-		return operations;
+		getOperationsList().add(operations);
 	}
 
-	private IOperation jsonToOperation(JSONObject jsonCmd) {
-		String cmd = getStringFromJSON(jsonCmd, "cmd");
+	private IOperation cmdToOperation(Command cmd) {
+		String cmdName = cmd.getName();
+		Object[] args = cmd.getArgs();
 		
-		if(cmd.equals("moveBuggle")) {
-			String buggle = getStringFromJSON(jsonCmd, "name");
-			int oldX = getIntFromJSON(jsonCmd, "oldX");
-			int oldY = getIntFromJSON(jsonCmd, "oldY");
-			int newX = getIntFromJSON(jsonCmd, "newX");
-			int newY = getIntFromJSON(jsonCmd, "newY");
+		if(cmdName.equals("moveBuggle")) {
+			
+			String buggle = (String) args[0];
+			int oldX = (int) args[1];
+			int oldY = (int) args[2];
+			int newX = (int) args[3];
+			int newY = (int) args[4];
 			
 			return new MoveBuggle(buggles.get(buggle), oldX, oldY, newX, newY);
 		}
 		
-		if(cmd.equals("changeBuggleDirection")) {
-			String buggle = getStringFromJSON(jsonCmd, "name");
-			String oldDirectionAsStr = getStringFromJSON(jsonCmd, "oldDirection");
-			String newDirectionAsStr = getStringFromJSON(jsonCmd, "newDirection");
+		if(cmdName.equals("changeBuggleDirection")) {
+			String buggle = (String) args[0];
 			
-			Direction oldDirection = null;
-			if(oldDirectionAsStr.equalsIgnoreCase("north")) {
-				oldDirection = Direction.NORTH;
-			}
-			else if(oldDirectionAsStr.equalsIgnoreCase("south")) {
-				oldDirection = Direction.SOUTH;
-			}
-			else if(oldDirectionAsStr.equalsIgnoreCase("east")) {
-				oldDirection = Direction.EAST;
-			}
-			else if(oldDirectionAsStr.equalsIgnoreCase("west")) {
-				oldDirection = Direction.WEST;
-			}
-			
-			Direction newDirection = null;
-			if(newDirectionAsStr.equalsIgnoreCase("north")) {
-				newDirection = Direction.NORTH;
-			}
-			else if(newDirectionAsStr.equalsIgnoreCase("south")) {
-				newDirection = Direction.SOUTH;
-			}
-			else if(newDirectionAsStr.equalsIgnoreCase("east")) {
-				newDirection = Direction.EAST;
-			}
-			else if(newDirectionAsStr.equalsIgnoreCase("west")) {
-				newDirection = Direction.WEST;
-			}
-			
+			Direction oldDirection = (Direction) args[1];
+			Direction newDirection = (Direction) args[2];
+		
 			return new ChangeBuggleDirection(buggles.get(buggle), oldDirection, newDirection);
 		}
 		
-		if(cmd.equals("changeCellColor")) {
-			int x = getIntFromJSON(jsonCmd, "x");
-			int y = getIntFromJSON(jsonCmd, "y");
+		if(cmdName.equals("changeCellColor")) {
+			int x = (int) args[0];
+			int y = (int) args[1];
 			
-			String oldColorName = getStringFromJSON(jsonCmd, "oldColor");
-			String newColorName = getStringFromJSON(jsonCmd, "newColor");
-			
-			Color oldColor = null;
-			Color newColor = null;
-			try {
-				oldColor = ColorMapper.name2color(oldColorName);
-				newColor = ColorMapper.name2color(newColorName);
-			} catch (InvalidColorNameException e) {
-				System.err.println(Game.i18n.tr("An error occured while retrieving the color from its name to display it, please report the following error"));
-				e.printStackTrace();
-				return null;
-			}
-			
+			Color oldColor = (Color) args[2];
+			Color newColor = (Color) args[3];
+
 			BuggleCommandWorldCell cell = (BuggleCommandWorldCell) cells[x][y];
 			
 			return new ChangeCellColor(cell, oldColor, newColor);
 		}
 		
-		if(cmd.equals("changeCellHasBaggle")) {
-			int x = getIntFromJSON(jsonCmd, "x");
-			int y = getIntFromJSON(jsonCmd, "y");
+		if(cmdName.equals("changeCellHasBaggle")) {
+			int x = (int) args[0];
+			int y = (int) args[1];
 			
-			boolean oldHasBaggle = getBoolFromJSON(jsonCmd, "oldHasBaggle");
-			boolean newHasBaggle = getBoolFromJSON(jsonCmd, "newHasBaggle");
+			boolean oldHasBaggle = (boolean) args[2];
+			boolean newHasBaggle = (boolean) args[3];
 			
 			BuggleCommandWorldCell cell = (BuggleCommandWorldCell) cells[x][y];
 			return new ChangeCellHasBaggle(cell, oldHasBaggle, newHasBaggle);
 		}
 		
-		if(cmd.equals("changeCellContent")) {
-			int x = getIntFromJSON(jsonCmd, "x");
-			int y = getIntFromJSON(jsonCmd, "y");
+		if(cmdName.equals("changeCellContent")) {
+			int x = (int) args[0];
+			int y = (int) args[1];
 			
-			boolean oldHasContent = getBoolFromJSON(jsonCmd, "oldHasContent");
-			boolean newHasContent = getBoolFromJSON(jsonCmd, "newHasContent");
+			boolean oldHasContent = (boolean) args[2];
+			boolean newHasContent = (boolean) args[3];
 			
-			String oldContent = getStringFromJSON(jsonCmd, "oldContent");
-			String newContent = getStringFromJSON(jsonCmd, "newContent");
+			String oldContent = (String) args[4];
+			String newContent = (String) args[5];
 		
 			BuggleCommandWorldCell cell = (BuggleCommandWorldCell) cells[x][y];
 			return new ChangeCellContent(cell, oldHasContent, newHasContent, oldContent, newContent);
 		}
-		/*
-		if(cmd.equals("displayError")) {
-			String title = getStringFromJSON(jsonCmd, "title");
-			String msg = getStringFromJSON(jsonCmd, "msg");
-			
-			return new DisplayError(title, msg);
-		}
-		*/
 		
-		// TODO: throw unknown command exception
 		return null;
 	}
-
+	
 	public void dispose() {
 		super.dispose();
 		buggles.clear();
 	}
-
 }

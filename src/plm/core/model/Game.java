@@ -64,12 +64,10 @@ import plm.core.ui.MainFrame;
 import plm.core.utils.FileUtils;
 import plm.universe.Bridge;
 import plm.universe.Entity;
-import plm.universe.IConverter;
 import plm.universe.ISender;
 import plm.universe.IWorldView;
 import plm.universe.World;
 import plm.universe.bugglequest.BuggleWorld;
-import plm.universe.bugglequest.ui.command.JSONConverter;
 import plm.universe.bugglequest.ui.command.LocalSender;
 
 /*
@@ -509,11 +507,10 @@ public class Game implements IWorldView {
 				if(getSelectedWorld() instanceof BuggleWorld) {
 					BuggleWorld bw = (BuggleWorld) Game.getInstance().getSelectedWorld();
 					ISender sender = new LocalSender(bw.toJSON());
-					IConverter converter = new JSONConverter();
 					if(bridge != null) {
 						bridge.dispose();
 					}
-					bridge = new Bridge(converter, sender);
+					bridge = new Bridge(sender);
 				}
 				
 				ProgrammingLanguage fallback = null;

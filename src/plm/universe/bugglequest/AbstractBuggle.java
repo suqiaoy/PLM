@@ -8,7 +8,6 @@ import java.io.IOException;
 import plm.core.model.Game;
 import plm.core.utils.ColorMapper;
 import plm.core.utils.InvalidColorNameException;
-import plm.universe.Bridge;
 import plm.universe.Direction;
 import plm.universe.Entity;
 import plm.universe.GridWorld;
@@ -137,38 +136,11 @@ public abstract class AbstractBuggle extends Entity {
 
 	public void setDirection(Direction direction) {
 		if (direction != null) {
-			String oldDirection = "";
-			String newDirection = "";
-			
-			if(this.direction.intValue() == Direction.NORTH_VALUE) {
-				oldDirection = "north";
-			}
-			else if(this.direction.intValue() == Direction.SOUTH_VALUE) {
-				oldDirection = "south";
-			}
-			else if(this.direction.intValue() == Direction.EAST_VALUE) {
-				oldDirection= "east";
-			}
-			else if(this.direction.intValue() == Direction.WEST_VALUE) {
-				oldDirection = "west";
-			}
-			
-			if(direction.intValue() == Direction.NORTH_VALUE) {
-				newDirection = "north";
-			}
-			else if(direction.intValue() == Direction.SOUTH_VALUE) {
-				newDirection = "south";
-			}
-			else if(direction.intValue() == Direction.EAST_VALUE) {
-				newDirection= "east";
-			}
-			else if(direction.intValue() == Direction.WEST_VALUE) {
-				newDirection = "west";
-			}
-			
-			getBridge().addCommand("changeBuggleDirection", name, oldDirection, newDirection);
-			
+			Direction oldDirection = this.direction;
 			this.direction = direction;
+			
+			getBridge().addCommand("changeBuggleDirection", name, oldDirection.copy(), direction.copy());
+			
 			stepUI();
 		}
 	}
@@ -352,7 +324,7 @@ public abstract class AbstractBuggle extends Entity {
 		int oldX = x;
 		int oldY = y;
 		
-		getBridge().addCommand("moveBuggle", name, oldX+"", oldY+"", newx+"", newy+"");
+		getBridge().addCommand("moveBuggle", name, oldX, oldY, newx, newy);
 		
 		x = newx;
 		y = newy;
@@ -360,10 +332,7 @@ public abstract class AbstractBuggle extends Entity {
 		if (brushDown) {
 			Color oldColor = getCell().getColor();
 			
-			String oldColorName = ColorMapper.color2name(oldColor);
-			String newColorName = ColorMapper.color2name(brushColor);
-			
-			getBridge().addCommand("changeCellColor", x+"", y+"", oldColorName, newColorName);
+			getBridge().addCommand("changeCellColor", x, y, oldColor, brushColor);
 			getCell().setColor(brushColor);
 		}
 
@@ -397,7 +366,7 @@ public abstract class AbstractBuggle extends Entity {
 		if (isCarryingBaggle())
 			throw new AlreadyHaveBaggleException(Game.i18n.tr("Your are already carrying a baggle."));
 		
-		getBridge().addCommand("changeCellHasBaggle", x+"", y+"", true+"", false+"");
+		getBridge().addCommand("changeCellHasBaggle", x, y, true, false);
 		
 		getCellFromLesson(this.x, this.y).baggleRemove();
 		carryBaggle = true;
@@ -411,7 +380,7 @@ public abstract class AbstractBuggle extends Entity {
 		if (isOverBaggle()) {
 			oldHasBaggle = true;
 		}
-		getBridge().addCommand("changeCellHasBaggle", x+"", y+"", oldHasBaggle+"", true+"");
+		getBridge().addCommand("changeCellHasBaggle", x, y, oldHasBaggle, true);
 		
 		getCellFromLesson(this.x, this.y).baggleAdd();
 		carryBaggle = false;
@@ -422,7 +391,7 @@ public abstract class AbstractBuggle extends Entity {
 	}
 
 	public void writeMessage(String msg) {
-		getBridge().addCommand("changeCellContent", x+"", y+"", getCell().hasContent()+"", true+"", getCell().getContent(), msg);
+		getBridge().addCommand("changeCellContent", x, y, getCell().hasContent(), true, getCell().getContent(), msg);
 		getCell().addContent(msg);
 	}
 	public void writeMessage(int nb) {
@@ -434,7 +403,7 @@ public abstract class AbstractBuggle extends Entity {
 	}
 
 	public void clearMessage() {
-		getBridge().addCommand("changeCellContent", x+"", y+"", getCell().hasContent()+"", false+"", getCell().getContent(), "");
+		getBridge().addCommand("changeCellContent", x, y, getCell().hasContent(), false, getCell().getContent(), "");
 		getCell().emptyContent();
 	}
 
