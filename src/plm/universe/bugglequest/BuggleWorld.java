@@ -21,6 +21,7 @@ import plm.core.ui.ResourcesCache;
 import plm.core.utils.ColorMapper;
 import plm.core.utils.FileUtils;
 import plm.core.utils.InvalidColorNameException;
+import plm.universe.Bridge;
 import plm.universe.BrokenWorldFileException;
 import plm.universe.Direction;
 import plm.universe.Entity;
@@ -31,6 +32,9 @@ import plm.universe.World;
 import plm.universe.bugglequest.exception.AlreadyHaveBaggleException;
 import plm.universe.bugglequest.ui.BuggleButtonPanel;
 import plm.universe.bugglequest.ui.BuggleWorldView;
+import plm.universe.bugglequest.ui.command.BuggleCommandWorld;
+import plm.universe.bugglequest.ui.command.BuggleCommandWorldView;
+import plm.universe.bugglequest.ui.command.LocalSender;
 
 
 public class BuggleWorld extends GridWorld {
@@ -65,6 +69,12 @@ public class BuggleWorld extends GridWorld {
 		easter=false;
 
 		super.reset(initialWorld);
+		if(getBridge() != null) {
+			getBridge().reset();
+		}
+		if(getCommandWorld() != null) {
+			getCommandWorld().reset();
+		}
 	}	
 	@Override
 	public void setWidth(int w) {
@@ -92,6 +102,16 @@ public class BuggleWorld extends GridWorld {
 	@Override
 	public BuggleWorldView getView() {
 		return new BuggleWorldView(this);
+	}
+	@Override
+	public BuggleCommandWorldView getCommandView() {
+		if(getCommandWorld()==null) {
+			setCommandWorld(new BuggleCommandWorld(this.toJSON()));
+		}
+		BuggleCommandWorldView bcwv = new BuggleCommandWorldView(getCommandWorld());
+		setBridge(new Bridge(new LocalSender(getCommandWorld())));
+		getBridge().setWorld(this);
+		return bcwv;
 	}
 	@Override
 	public EntityControlPanel getEntityControlPanel() {

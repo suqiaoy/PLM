@@ -40,6 +40,7 @@ public class Bridge implements IWorldView {
 
 	public void dispose() {
 		sender.dispose();
+		commands.clear();
 		if(w !=null) {
 			w.removeWorldUpdatesListener(this);
 		}

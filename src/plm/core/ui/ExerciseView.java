@@ -33,6 +33,7 @@ import plm.core.model.lesson.Lecture;
 import plm.universe.Entity;
 import plm.universe.EntityControlPanel;
 import plm.universe.World;
+import plm.universe.ui.CommandWorldView;
 
 
 public class ExerciseView extends JPanel implements GameListener, HumanLangChangesListener {
@@ -41,6 +42,8 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 	private Game game;
 	private WorldView worldView;
 	private WorldView objectivesView;
+	private CommandWorldView commandWorldView;
+	private CommandWorldView commandObjectivesView;
 	
 	private JComboBox<Entity> entityComboBox;
 	private JComboBox<World> worldComboBox;
@@ -90,12 +93,26 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 		tabPane = new JTabbedPane();
 		removeControlPage(tabPane);
 		if (Game.getInstance().getSelectedWorld() != null) {
-			worldView = Game.getInstance().getSelectedWorld().getView();
-			tabPane.addTab(i18n.tr("World"), null, worldView, i18n.tr("The world as it is right now"));
+			commandWorldView = game.getSelectedWorld().getCommandView();
+			if(commandWorldView == null) {
+				worldView = Game.getInstance().getSelectedWorld().getView();
+				tabPane.addTab(i18n.tr("World"), null, worldView, i18n.tr("The world as it is right now"));
+			}
+			else {
+				tabPane.addTab(i18n.tr("World"), null, commandWorldView, i18n.tr("The world as it is right now"));
+			}
 		}
 		if (Game.getInstance().getAnswerOfSelectedWorld() != null) {
-			objectivesView = Game.getInstance().getAnswerOfSelectedWorld().getView();
-			tabPane.addTab(i18n.tr("Objective"), null, objectivesView, i18n.tr("The world as it should be"));
+			commandObjectivesView = game.getAnswerOfSelectedWorld().getCommandView();
+			if(commandObjectivesView == null) {
+				objectivesView = Game.getInstance().getAnswerOfSelectedWorld().getView();
+				tabPane.addTab(i18n.tr("Objective"), null, objectivesView, i18n.tr("The world as it should be"));
+			}
+			else {
+				commandObjectivesView = Game.getInstance().getAnswerOfSelectedWorld().getCommandView();
+				tabPane.addTab(i18n.tr("World"), null, commandObjectivesView, i18n.tr("The world as it should be"));
+			}
+			
 		}
 		
 		upperPane.add(tabPane, "grow 100 100,push");
@@ -156,18 +173,46 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 		if (worldView != null && worldView.isWorldCompatible(this.game.getSelectedWorld())) {
 			worldView.setWorld(this.game.getSelectedWorld());
 			objectivesView.setWorld(this.game.getAnswerOfSelectedWorld());
+		} else if(commandWorldView != null && commandWorldView.isWorldCompatible(this.game.getSelectedWorld())) {
+			commandWorldView.setWorld(this.game.getSelectedWorld().getCommandWorld());
+			commandObjectivesView.setWorld(this.game.getAnswerOfSelectedWorld().getCommandWorld());
 		} else {
 			if(worldView != null) {
 				worldView.dispose();
 			}
+			if(commandWorldView != null) {
+				commandWorldView.dispose();
+			}
 			if(objectivesView != null) {
 				objectivesView.dispose();
 			}
+			if(commandObjectivesView != null) {
+				commandObjectivesView.dispose();
+			}
 			tabPane.removeAll();
-			worldView = Game.getInstance().getSelectedWorld().getView();
-			tabPane.addTab(i18n.tr("World"), null, worldView, i18n.tr("The world as it is right now"));
-			objectivesView = Game.getInstance().getAnswerOfSelectedWorld().getView();
-			tabPane.addTab(i18n.tr("Objective"), null, objectivesView, i18n.tr("The world as it should be"));
+			if (Game.getInstance().getSelectedWorld() != null) {
+				commandWorldView = game.getSelectedWorld().getCommandView();
+				if(commandWorldView == null) {
+					worldView = Game.getInstance().getSelectedWorld().getView();
+					tabPane.addTab(i18n.tr("World"), null, worldView, i18n.tr("The world as it is right now"));
+				}
+				else {
+					tabPane.addTab(i18n.tr("World"), null, commandWorldView, i18n.tr("The world as it is right now"));
+				}
+				
+			}
+			if (Game.getInstance().getAnswerOfSelectedWorld() != null) {
+				commandObjectivesView = game.getAnswerOfSelectedWorld().getCommandView();
+				if(commandObjectivesView == null) {
+					objectivesView = Game.getInstance().getAnswerOfSelectedWorld().getView();
+					tabPane.addTab(i18n.tr("Objective"), null, objectivesView, i18n.tr("The world as it should be"));
+				}
+				else {
+					commandObjectivesView = Game.getInstance().getAnswerOfSelectedWorld().getCommandView();
+					tabPane.addTab(i18n.tr("World"), null, commandObjectivesView, i18n.tr("The world as it should be"));
+				}
+				
+			}
 		}
 		
 		// To refresh the controlPane in any case ( else the SortingWorldPanel is not refreshed )

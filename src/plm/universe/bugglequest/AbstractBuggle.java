@@ -139,7 +139,7 @@ public abstract class AbstractBuggle extends Entity {
 			Direction oldDirection = this.direction;
 			this.direction = direction;
 			
-			getBridge().addCommand("changeBuggleDirection", name, oldDirection.copy(), direction.copy());
+			getWorld().getBridge().addCommand("changeBuggleDirection", name, oldDirection.copy(), direction.copy());
 			
 			stepUI();
 		}
@@ -324,7 +324,7 @@ public abstract class AbstractBuggle extends Entity {
 		int oldX = x;
 		int oldY = y;
 		
-		getBridge().addCommand("moveBuggle", name, oldX, oldY, newx, newy);
+		getWorld().getBridge().addCommand("moveBuggle", name, oldX, oldY, newx, newy);
 		
 		x = newx;
 		y = newy;
@@ -332,7 +332,7 @@ public abstract class AbstractBuggle extends Entity {
 		if (brushDown) {
 			Color oldColor = getCell().getColor();
 			
-			getBridge().addCommand("changeCellColor", x, y, oldColor, brushColor);
+			getWorld().getBridge().addCommand("changeCellColor", x, y, oldColor, brushColor);
 			getCell().setColor(brushColor);
 		}
 
@@ -366,7 +366,7 @@ public abstract class AbstractBuggle extends Entity {
 		if (isCarryingBaggle())
 			throw new AlreadyHaveBaggleException(Game.i18n.tr("Your are already carrying a baggle."));
 		
-		getBridge().addCommand("changeCellHasBaggle", x, y, true, false);
+		getWorld().getBridge().addCommand("changeCellHasBaggle", x, y, true, false);
 		
 		getCellFromLesson(this.x, this.y).baggleRemove();
 		carryBaggle = true;
@@ -380,7 +380,7 @@ public abstract class AbstractBuggle extends Entity {
 		if (isOverBaggle()) {
 			oldHasBaggle = true;
 		}
-		getBridge().addCommand("changeCellHasBaggle", x, y, oldHasBaggle, true);
+		getWorld().getBridge().addCommand("changeCellHasBaggle", x, y, oldHasBaggle, true);
 		
 		getCellFromLesson(this.x, this.y).baggleAdd();
 		carryBaggle = false;
@@ -391,7 +391,7 @@ public abstract class AbstractBuggle extends Entity {
 	}
 
 	public void writeMessage(String msg) {
-		getBridge().addCommand("changeCellContent", x, y, getCell().hasContent(), true, getCell().getContent(), msg);
+		getWorld().getBridge().addCommand("changeCellContent", x, y, getCell().hasContent(), true, getCell().getContent(), msg);
 		getCell().addContent(msg);
 	}
 	public void writeMessage(int nb) {
@@ -403,7 +403,7 @@ public abstract class AbstractBuggle extends Entity {
 	}
 
 	public void clearMessage() {
-		getBridge().addCommand("changeCellContent", x, y, getCell().hasContent(), false, getCell().getContent(), "");
+		getWorld().getBridge().addCommand("changeCellContent", x, y, getCell().hasContent(), false, getCell().getContent(), "");
 		getCell().emptyContent();
 	}
 

@@ -21,6 +21,8 @@ import plm.core.model.lesson.ExecutionProgress;
 import plm.core.ui.PlmHtmlEditorKit;
 import plm.core.ui.WorldView;
 import plm.core.utils.FileUtils;
+import plm.universe.ui.CommandWorld;
+import plm.universe.ui.CommandWorldView;
 
 public abstract class World {
 	private boolean isDelayed = false; // whether we display interactively or not
@@ -28,6 +30,9 @@ public abstract class World {
 	private int delay = 100; // delay between two instruction executions of an entity.
 
 	protected List<Entity> entities = new ArrayList<Entity>();
+
+	private CommandWorld commandWorld;
+	private Bridge bridge;
 
 	private String name;
 
@@ -39,6 +44,7 @@ public abstract class World {
 
 	public World(World w2) {
 		this(w2.getName());
+		this.commandWorld = w2.commandWorld;
 		reset(w2);
 	}
 
@@ -154,12 +160,8 @@ public abstract class World {
 		final ProgrammingLanguage pl = Game.getProgrammingLanguage();
 		if (Game.getInstance().isDebugEnabled())
 			Logger.log("World:runEntities","Programming language: "+pl);
-		
-		Game.getInstance().getBridge().setWorld(this);
-		Game.getInstance().getBridge().reset();
-		
+
 		for (final Entity b : entities) {
-			b.setBridge(Game.getInstance().getBridge());
 			Thread runner = new Thread(new Runnable() {
 				public void run() {
 					Game.getInstance().statusArgAdd(getName());
@@ -372,4 +374,24 @@ public abstract class World {
 
 	/** Returns a textual representation of the differences from the receiver world to the one in parameter*/
 	public abstract String diffTo(World world);
+	
+	public Bridge getBridge() {
+		return bridge;
+	}
+
+	public void setBridge(Bridge bridge) {
+		this.bridge = bridge;
+	}
+
+	public CommandWorldView getCommandView() {
+		return null;
+	}
+	
+	public CommandWorld getCommandWorld() {
+		return commandWorld;
+	}
+
+	public void setCommandWorld(CommandWorld commandWorld) {
+		this.commandWorld = commandWorld;
+	}
 }
