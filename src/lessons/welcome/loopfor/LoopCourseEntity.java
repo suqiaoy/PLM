@@ -36,6 +36,8 @@ public class LoopCourseEntity extends plm.universe.bugglequest.SimpleBuggle {
 					c = colors[i+1];
 				break;
 			}
+		Color oldColor = getCell().getColor();
+		getWorld().getBridge().addCommand("changeCellColor", getX(), getY(), oldColor, c);
 		setBrushColor(c);
 		brushDown();
 		brushUp();

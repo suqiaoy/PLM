@@ -20,7 +20,8 @@ def forward(i=-1):
                   else:
                       c = colors[i+1]
                   break
-          setBrushColor(c)    
+          getWorld().getBridge().addCommand("changeCellColor", getX(), getY(), getGroundColor(), c)
+          setBrushColor(c)
           brushDown()
           brushUp()
     else:

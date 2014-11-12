@@ -21,14 +21,20 @@ public class LoopStairsEntity extends plm.universe.bugglequest.SimpleBuggle {
 	int step = -3;
 	@Override
 	public void forward()  {
+		Color color = null;
+		
 		super.forward();
 		if (step<0 || step%2 == 1 || (step/2)>=colors.length) {
 			if (step < 0)
-				setBrushColor(Color.lightGray);
+				color = Color.lightGray;
 			else if ((step/2)>=colors.length)
-				setBrushColor(Color.pink);
+				color = Color.pink;
 			else
-				setBrushColor(colors[(step/2)%colors.length]);
+				color = colors[(step/2)%colors.length];
+			
+			Color oldColor = getCell().getColor();
+			getWorld().getBridge().addCommand("changeCellColor", getX(), getY(), oldColor, color);
+			setBrushColor(color);
 			brushDown();
 			brushUp();
 		}

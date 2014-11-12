@@ -6,15 +6,19 @@ colors = [Color.blue,    Color.cyan, Color.green,  Color.yellow,
 step = -3
 def forward(i=-1):
     global step
+    
     if i==-1 or i==1:
       entity.forward()
+      c = getGroundColor()
       if step<0 or step%2 == 1 or (step/2)>=len(colors):
           if step < 0:
-              setBrushColor(Color.lightGray)
+              c = Color.lightGray
           elif (step/2)>=len(colors):
-              setBrushColor(Color.pink)
+              c = Color.pink
           else:
-              setBrushColor(colors[(step/2)%len(colors)])
+              c = colors[(step/2)%len(colors)]
+          getWorld().getBridge().addCommand("changeCellColor", getX(), getY(), getGroundColor(), c)
+          setBrushColor(c)
           brushDown()
           brushUp()
       step += 1

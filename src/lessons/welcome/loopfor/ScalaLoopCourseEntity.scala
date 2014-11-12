@@ -33,6 +33,8 @@ class ScalaLoopCourseEntity extends SimpleBuggle {
 				else	
 					nextColor = colors(i+1);
 			}
+    var oldColor:Color = getCell().getColor();
+    getWorld().getBridge().addCommand("changeCellColor", Int.box(getX()), Int.box(getY()), oldColor, nextColor);
 		setBrushColor(nextColor);
 		brushDown();
 		brushUp();
