@@ -110,7 +110,7 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 			}
 			else {
 				commandObjectivesView = Game.getInstance().getAnswerOfSelectedWorld().getCommandView();
-				tabPane.addTab(i18n.tr("World"), null, commandObjectivesView, i18n.tr("The world as it should be"));
+				tabPane.addTab(i18n.tr("Objective"), null, commandObjectivesView, i18n.tr("The world as it should be"));
 			}
 			
 		}
@@ -190,7 +190,7 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 				commandObjectivesView.dispose();
 			}
 			tabPane.removeAll();
-			if (Game.getInstance().getSelectedWorld() != null) {
+			if (game.getSelectedWorld() != null) {
 				commandWorldView = game.getSelectedWorld().getCommandView();
 				if(commandWorldView == null) {
 					worldView = Game.getInstance().getSelectedWorld().getView();
@@ -201,7 +201,7 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 				}
 				
 			}
-			if (Game.getInstance().getAnswerOfSelectedWorld() != null) {
+			if (game.getAnswerOfSelectedWorld() != null) {
 				commandObjectivesView = game.getAnswerOfSelectedWorld().getCommandView();
 				if(commandObjectivesView == null) {
 					objectivesView = Game.getInstance().getAnswerOfSelectedWorld().getView();
@@ -209,7 +209,7 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 				}
 				else {
 					commandObjectivesView = Game.getInstance().getAnswerOfSelectedWorld().getCommandView();
-					tabPane.addTab(i18n.tr("World"), null, commandObjectivesView, i18n.tr("The world as it should be"));
+					tabPane.addTab(i18n.tr("Objective"), null, commandObjectivesView, i18n.tr("The world as it should be"));
 				}
 				
 			}

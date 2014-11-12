@@ -105,8 +105,10 @@ public class BuggleWorld extends GridWorld {
 	}
 	@Override
 	public BuggleCommandWorldView getCommandView() {
+		// FIXME: find a better way to initialize the commandWorld
 		if(getCommandWorld()==null) {
-			setCommandWorld(new BuggleCommandWorld(this.toJSON()));
+			BuggleWorld bw = (BuggleWorld) Game.getInstance().getSelectedWorlds()[0];
+			setCommandWorld(new BuggleCommandWorld(bw.toJSON()));
 		}
 		BuggleCommandWorldView bcwv = new BuggleCommandWorldView(getCommandWorld());
 		setBridge(new Bridge(new LocalSender(getCommandWorld())));
