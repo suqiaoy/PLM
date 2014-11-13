@@ -1,6 +1,7 @@
 package plm.core.ui;
 
 import java.awt.AWTKeyStroke;
+import java.awt.BorderLayout;
 import java.awt.KeyboardFocusManager;
 import java.util.HashSet;
 import java.util.Locale;
@@ -99,7 +100,11 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 				tabPane.addTab(i18n.tr("World"), null, worldView, i18n.tr("The world as it is right now"));
 			}
 			else {
-				tabPane.addTab(i18n.tr("World"), null, commandWorldView, i18n.tr("The world as it is right now"));
+				JPanel panel = new JPanel();
+				panel.setLayout(new BorderLayout());
+				panel.add(commandWorldView, BorderLayout.CENTER);
+				panel.add(new HistorySlider(game.getSelectedWorld().getCommandWorld()), BorderLayout.SOUTH);
+				tabPane.addTab(i18n.tr("World"), null, panel, i18n.tr("The world as it is right now"));
 			}
 		}
 		if (Game.getInstance().getAnswerOfSelectedWorld() != null) {
@@ -110,7 +115,11 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 			}
 			else {
 				commandObjectivesView = Game.getInstance().getAnswerOfSelectedWorld().getCommandView();
-				tabPane.addTab(i18n.tr("Objective"), null, commandObjectivesView, i18n.tr("The world as it should be"));
+				JPanel panel = new JPanel();
+				panel.setLayout(new BorderLayout());
+				panel.add(commandObjectivesView, BorderLayout.CENTER);
+				panel.add(new HistorySlider(game.getAnswerOfSelectedWorld().getCommandWorld()), BorderLayout.SOUTH);
+				tabPane.addTab(i18n.tr("Objective"), null, panel, i18n.tr("The world as it should be"));
 			}
 			
 		}
@@ -197,7 +206,11 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 					tabPane.addTab(i18n.tr("World"), null, worldView, i18n.tr("The world as it is right now"));
 				}
 				else {
-					tabPane.addTab(i18n.tr("World"), null, commandWorldView, i18n.tr("The world as it is right now"));
+					JPanel panel = new JPanel();
+					panel.setLayout(new BorderLayout());
+					panel.add(commandWorldView, BorderLayout.CENTER);
+					panel.add(new HistorySlider(game.getSelectedWorld().getCommandWorld()), BorderLayout.SOUTH);
+					tabPane.addTab(i18n.tr("World"), null, panel, i18n.tr("The world as it is right now"));
 				}
 				
 			}
@@ -209,7 +222,11 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 				}
 				else {
 					commandObjectivesView = Game.getInstance().getAnswerOfSelectedWorld().getCommandView();
-					tabPane.addTab(i18n.tr("Objective"), null, commandObjectivesView, i18n.tr("The world as it should be"));
+					JPanel panel = new JPanel();
+					panel.setLayout(new BorderLayout());
+					panel.add(commandObjectivesView, BorderLayout.CENTER);
+					panel.add(new HistorySlider(game.getAnswerOfSelectedWorld().getCommandWorld()), BorderLayout.SOUTH);
+					tabPane.addTab(i18n.tr("Objective"), null, panel, i18n.tr("The world as it should be"));
 				}
 				
 			}

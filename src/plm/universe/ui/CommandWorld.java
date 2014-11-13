@@ -2,8 +2,9 @@ package plm.universe.ui;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
 
-public abstract class CommandWorld implements ICommandWorld {
+public abstract class CommandWorld extends Observable implements ICommandWorld {
 
 	private String name = "default";
 	private CommandWorld initialWorld;
@@ -50,6 +51,9 @@ public abstract class CommandWorld implements ICommandWorld {
 		setName(initialWorld.getName());
 		operationsList.clear();
 		currentState = -1;
+		setChanged();
+		notifyObservers(-1);
+		clearChanged();
 	}
 	
 	private ArrayList<ICommandWorldView> worldUpdatesListeners = new ArrayList<ICommandWorldView>();

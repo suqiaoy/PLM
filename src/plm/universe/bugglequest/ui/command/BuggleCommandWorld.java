@@ -172,7 +172,9 @@ public class BuggleCommandWorld extends CommandGridWorld {
 		}
 		
 		getOperationsList().add(operations);
-		setState(getCurrentState()+1);
+		setChanged();
+		notifyObservers(getCurrentState()+1);
+		clearChanged();
 	}
 
 	private IOperation cmdToOperation(Command cmd) {
