@@ -141,10 +141,21 @@ public class BuggleButtonPanel extends EntityControlPanel implements Observer {
 			@Override
 			public void actionPerformed(ActionEvent event) {
 				JComboBox<?> cb = (JComboBox<?>) event.getSource();
-				Color c = (Color) cb.getSelectedItem();
+				final Color c = (Color) cb.getSelectedItem();
 				cb.setSelectedItem(c);
 				echo(i18n.tr("setBrushColor(Color.{0})",ColorMapper.color2name(c)));
-				((AbstractBuggle)Game.getInstance().getSelectedEntity()).setBrushColor(c);
+				Thread t = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						((AbstractBuggle)Game.getInstance().getSelectedEntity()).setBrushColor(c);
+					}
+				});
+				t.start();
+				try {
+					t.join();
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}

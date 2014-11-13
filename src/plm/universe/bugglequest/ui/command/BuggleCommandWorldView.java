@@ -165,7 +165,7 @@ public class BuggleCommandWorldView extends CommandWorldView {
 		double oy = bv.getY()*getCellWidth(); // y-offset of the cell
 		
 		if (bv.isBrushDown()) {
-			if (Color.BLACK.equals(bv.getBrushColor())) 
+			if (Color.BLACK.equals(bv.getBrushColor()))
 				g.setColor(Color.WHITE);
 			else
 				g.setColor(Color.BLACK);

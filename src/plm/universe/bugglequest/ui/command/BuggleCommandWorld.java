@@ -15,6 +15,9 @@ import plm.core.utils.ColorMapper;
 import plm.core.utils.InvalidColorNameException;
 import plm.universe.Command;
 import plm.universe.Direction;
+import plm.universe.bugglequest.ui.command.operations.ChangeBuggleBrushColor;
+import plm.universe.bugglequest.ui.command.operations.ChangeBuggleBrushState;
+import plm.universe.bugglequest.ui.command.operations.ChangeBuggleColor;
 import plm.universe.bugglequest.ui.command.operations.ChangeBuggleDirection;
 import plm.universe.bugglequest.ui.command.operations.ChangeCellColor;
 import plm.universe.bugglequest.ui.command.operations.ChangeCellContent;
@@ -199,6 +202,33 @@ public class BuggleCommandWorld extends CommandGridWorld {
 			Direction newDirection = (Direction) args[2];
 		
 			return new ChangeBuggleDirection(buggles.get(buggle), oldDirection, newDirection);
+		}
+		
+		if(cmdName.equals("changeBuggleColor")) {
+			String buggle = (String) args[0];
+			
+			Color oldColor = (Color) args[1];
+			Color newColor = (Color) args[2];
+		
+			return new ChangeBuggleColor(buggles.get(buggle), oldColor, newColor);
+		}
+		
+		if(cmdName.equals("changeBuggleBrushColor")) {
+			String buggle = (String) args[0];
+			
+			Color oldColor = (Color) args[1];
+			Color newColor = (Color) args[2];
+		
+			return new ChangeBuggleBrushColor(buggles.get(buggle), oldColor, newColor);
+		}
+		
+		if(cmdName.equals("changeBuggleBrushState")) {
+			String buggle = (String) args[0];
+			
+			boolean oldState = (boolean) args[1];
+			boolean newState = (boolean) args[2];
+		
+			return new ChangeBuggleBrushState(buggles.get(buggle), oldState, newState);
 		}
 		
 		if(cmdName.equals("changeCellColor")) {

@@ -87,17 +87,27 @@ public abstract class AbstractBuggle extends Entity {
 	public void brushDown() {
 		this.brushDown = true;
 		BuggleWorldCell cell = (BuggleWorldCell) ((BuggleWorld)world).getCell(x, y);
+		if(world.getBridge() != null) {
+			world.getBridge().addCommand("changeBuggleBrushState", getName(), false, true);
+			world.getBridge().addCommand("changeCellColor", x, y, cell.getColor(), brushColor);
+		}
 		cell.setColor(brushColor);
 		world.notifyWorldUpdatesListeners();
 		setChanged();
 		notifyObservers(BRUSH_STATE);
+		clearChanged();
+		stepUI();
 	}
 
 	public void brushUp() {
+		if(world.getBridge() != null) {
+			world.getBridge().addCommand("changeBuggleBrushState", getName(), true, false);
+		}
 		if (k_seq[k_val]==4) k_val++; else k_val = 0;
 		this.brushDown = false;
 		setChanged();
 		notifyObservers(BRUSH_STATE);
+		clearChanged();
 	}
 
 	public Color getGroundColor() {
@@ -109,12 +119,18 @@ public abstract class AbstractBuggle extends Entity {
 	}
 
 	public void setBrushColor(Color c) {
-		if (c != null)
+		if (c != null) {
+			if(world.getBridge() != null) {
+				world.getBridge().addCommand("changeBuggleBrushColor", getName(), brushColor, c);
+				stepUI();
+			}
 			brushColor = c;
+		}
 		if (brushDown) // mark the ground
 			brushDown();
 		setChanged();
 		notifyObservers(BRUSH_COLOR);
+		clearChanged();
 	}
 
 	public Color getBodyColor() {
@@ -123,10 +139,13 @@ public abstract class AbstractBuggle extends Entity {
 
 	public void setBodyColor(Color c) {
 		if (c != null) {
+			getWorld().getBridge().addCommand("changeBuggleColor", name, bodyColor, c);
 			this.bodyColor = c;
 			world.notifyWorldUpdatesListeners();
 			setChanged();
 			notifyObservers(BUGGLE_COLOR);
+			clearChanged();
+			stepUI();
 		}
 	}
 
