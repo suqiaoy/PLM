@@ -30,13 +30,9 @@ public class HistorySlider extends JSlider implements Observer {
 	
 	@Override
 	public void update(Observable arg0, Object arg1) {
-		System.out.println("On a été notifié");
 		int state = cw.getCurrentState();
 		int max = (int) arg1;
-		
-		System.out.println("State: "+state);
-		System.out.println("Max: "+max);
-		
+
 		this.setMaximum(max);
 		this.setValue(state+1);
 	}
