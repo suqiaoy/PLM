@@ -1,8 +1,17 @@
-20141015: wannabe Release 2.5
+20141130: wannabe 2.6
 
   * Improved translations:
+    - Brazilian: missions at 60%
+  * Pedagogical content:
+    - #410: Fix my usage of "teach" vs. "learn" in English
+
+20141031: Release 2.5
+
+  The Halloween Release.
+  
+  * Improved translations:
     - French: mission and engine back at 100%
-    - Brazilian: missions at 56%
+    - Brazilian: missions at 58%
   * Engine:
     - #292: Check the user's input before submitting a feedback
     - #304: Stop user's program's or demo's execution if the user 
@@ -24,7 +33,7 @@
     - #239: CourseForest: get stick in water, not moving anymore
     - #405: LoopStairs: Make French python bindings fit the templating
     - #406: Lander101: unclear mission text wrt stepping the simulation
-
+    - #409: LoopWhile: additional reference to "About this world" menu
 
 20141009: Release 2.4.11
 
