@@ -189,14 +189,8 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 			if(worldView != null) {
 				worldView.dispose();
 			}
-			if(commandWorldView != null) {
-				commandWorldView.dispose();
-			}
 			if(objectivesView != null) {
 				objectivesView.dispose();
-			}
-			if(commandObjectivesView != null) {
-				commandObjectivesView.dispose();
 			}
 			tabPane.removeAll();
 			if (game.getSelectedWorld() != null) {

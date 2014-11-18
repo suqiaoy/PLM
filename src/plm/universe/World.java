@@ -382,7 +382,7 @@ public abstract class World {
 	public void setBridge(Bridge bridge) {
 		this.bridge = bridge;
 	}
-
+	
 	public CommandWorldView getCommandView() {
 		return null;
 	}

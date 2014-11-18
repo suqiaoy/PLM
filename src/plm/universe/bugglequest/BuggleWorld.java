@@ -39,6 +39,7 @@ import plm.universe.bugglequest.ui.command.LocalSender;
 
 public class BuggleWorld extends GridWorld {
 
+	private BuggleCommandWorldView bcwv;
 	public BuggleWorld(String name, int x, int y) {
 		super(name,x,y);
 	}
@@ -52,8 +53,9 @@ public class BuggleWorld extends GridWorld {
 	 */
 	public BuggleWorld(BuggleWorld world2) {
 		super(world2);
+		initCommandWorld(this.toJSON());
 	}
-
+	
 	/**
 	 * Reset the content of a world to be the same than the one passed as argument
 	 * does not affect the name of the initial world.
@@ -103,16 +105,13 @@ public class BuggleWorld extends GridWorld {
 	public BuggleWorldView getView() {
 		return new BuggleWorldView(this);
 	}
+	
 	@Override
 	public BuggleCommandWorldView getCommandView() {
 		// FIXME: find a better way to initialize the commandWorld
-		if(getCommandWorld()==null) {
-			BuggleWorld bw = (BuggleWorld) Game.getInstance().getSelectedWorlds()[0];
-			setCommandWorld(new BuggleCommandWorld(bw.toJSON()));
+		if(bcwv == null) {
+			initCommandWorld(this.toJSON());
 		}
-		BuggleCommandWorldView bcwv = new BuggleCommandWorldView(getCommandWorld());
-		setBridge(new Bridge(new LocalSender(getCommandWorld())));
-		getBridge().setWorld(this);
 		return bcwv;
 	}
 	@Override
@@ -293,10 +292,24 @@ public class BuggleWorld extends GridWorld {
 
 			line = reader.readLine();
 		} while (line != null);
-
+		String json = res.toJSON();
+		if(path.contains("answer")) {
+			json = this.toJSON();
+		}
+		res.initCommandWorld(json);
 		return res;
 	}
 
+	private void initCommandWorld(String json) {
+		if(getCommandWorld()==null) {
+			setCommandWorld(new BuggleCommandWorld(json));
+		}
+		if(bcwv == null) {
+			bcwv = new BuggleCommandWorldView(getCommandWorld());
+			setBridge(new Bridge(new LocalSender(getCommandWorld())));
+			getBridge().setWorld(this);
+		}
+	}
 	@Override
 	public void writeToFile(BufferedWriter writer) throws IOException {
 
