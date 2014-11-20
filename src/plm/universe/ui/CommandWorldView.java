@@ -30,6 +30,7 @@ public abstract class CommandWorldView extends JComponent implements ICommandWor
 	}
 	
 	public void dispose() {
+		world.removeWorldUpdatesListener(this);
 		this.world = null;
 	}
 	

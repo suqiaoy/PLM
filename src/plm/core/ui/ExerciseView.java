@@ -103,7 +103,7 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 				JPanel panel = new JPanel();
 				panel.setLayout(new BorderLayout());
 				panel.add(commandWorldView, BorderLayout.CENTER);
-				panel.add(new HistorySlider(game.getSelectedWorld().getCommandWorld()), BorderLayout.SOUTH);
+				panel.add(new HistoryPanel(game.getSelectedWorld().getCommandWorld()), BorderLayout.SOUTH);
 				tabPane.addTab(i18n.tr("World"), null, panel, i18n.tr("The world as it is right now"));
 			}
 		}
@@ -118,7 +118,7 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 				JPanel panel = new JPanel();
 				panel.setLayout(new BorderLayout());
 				panel.add(commandObjectivesView, BorderLayout.CENTER);
-				panel.add(new HistorySlider(game.getAnswerOfSelectedWorld().getCommandWorld()), BorderLayout.SOUTH);
+				panel.add(new HistoryPanel(game.getAnswerOfSelectedWorld().getCommandWorld()), BorderLayout.SOUTH);
 				tabPane.addTab(i18n.tr("Objective"), null, panel, i18n.tr("The world as it should be"));
 			}
 			
@@ -203,7 +203,7 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 					JPanel panel = new JPanel();
 					panel.setLayout(new BorderLayout());
 					panel.add(commandWorldView, BorderLayout.CENTER);
-					panel.add(new HistorySlider(game.getSelectedWorld().getCommandWorld()), BorderLayout.SOUTH);
+					panel.add(new HistoryPanel(game.getSelectedWorld().getCommandWorld()), BorderLayout.SOUTH);
 					tabPane.addTab(i18n.tr("World"), null, panel, i18n.tr("The world as it is right now"));
 				}
 				
@@ -219,7 +219,7 @@ public class ExerciseView extends JPanel implements GameListener, HumanLangChang
 					JPanel panel = new JPanel();
 					panel.setLayout(new BorderLayout());
 					panel.add(commandObjectivesView, BorderLayout.CENTER);
-					panel.add(new HistorySlider(game.getAnswerOfSelectedWorld().getCommandWorld()), BorderLayout.SOUTH);
+					panel.add(new HistoryPanel(game.getAnswerOfSelectedWorld().getCommandWorld()), BorderLayout.SOUTH);
 					tabPane.addTab(i18n.tr("Objective"), null, panel, i18n.tr("The world as it should be"));
 				}
 				
