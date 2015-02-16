@@ -35,6 +35,7 @@ public class BuggleWorld extends GridWorld {
 	public BuggleWorld(String name, int x, int y) {
 		super(name,x,y);
 	}
+	
 	@Override
 	protected GridWorldCell newCell(int x, int y) {
 		return new BuggleWorldCell(this, x, y);

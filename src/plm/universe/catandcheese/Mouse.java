@@ -8,7 +8,6 @@ import plm.universe.Direction;
 import plm.universe.Entity;
 import plm.universe.GridWorld;
 import plm.universe.World;
-import plm.universe.catandcheese.exception.EntityInOuterSpaceException;
 
 public class Mouse extends Entity {
 
